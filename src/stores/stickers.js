@@ -15,7 +15,8 @@ export const useStickersStore = defineStore('stickers', () => {
     crown: { icon: '👑', nameKey: 'crown' }
   }
 
-  const operations = ['addition', 'subtraction', 'multiplication', 'division', 'fraction']
+  // Fraction disabled for now
+  const operations = ['addition', 'subtraction', 'multiplication', 'division']
 
   // Achievement stickers (operation-based)
   const achievementStickers = computed(() => {

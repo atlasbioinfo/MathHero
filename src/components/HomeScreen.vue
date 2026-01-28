@@ -17,19 +17,18 @@
             {{ userStore.theme.decorations[i % userStore.theme.decorations.length] }}
           </span>
         </div>
-        <div class="avatar-wrapper">
-          <img :src="userStore.theme.avatar" alt="avatar" class="home-avatar" />
-          <div class="avatar-ring"></div>
+        <div class="card-content">
+          <div class="avatar-wrapper">
+            <img :src="userStore.theme.avatar" alt="avatar" class="home-avatar" />
+            <div class="avatar-ring"></div>
+          </div>
+          <div class="info-section">
+            <h1 class="welcome-text">{{ t.userMenu.welcome }}!</h1>
+            <h2 class="user-name-display">{{ userStore.username || (userStore.gender === 'prince' ? t.welcome.defaultPrince : t.welcome.defaultPrincess) }}</h2>
+            <!-- Sticker Showcase -->
+            <StickerShowcase />
+          </div>
         </div>
-        <h1 class="welcome-text">{{ t.userMenu.welcome }}!</h1>
-        <h2 class="user-name-display">{{ userStore.username || (userStore.gender === 'prince' ? t.welcome.defaultPrince : t.welcome.defaultPrincess) }}</h2>
-        <p class="role-badge">
-          <span class="badge-icon">👑</span>
-          {{ userStore.gender === 'prince' ? t.home.princeTitle : t.home.princessTitle }}
-        </p>
-
-        <!-- Sticker Showcase -->
-        <StickerShowcase />
       </div>
     </div>
 
@@ -92,11 +91,30 @@
 
     <!-- Action Buttons -->
     <div class="action-section">
+      <button class="action-btn share-btn" @click="handleShare">
+        <span class="action-icon">📤</span>
+        {{ t.share?.button || 'Share' }}
+      </button>
       <button class="action-btn reset-btn" @click="confirmReset">
         <span class="action-icon">🔄</span>
         {{ t.home.reset }}
       </button>
     </div>
+
+    <!-- Share Modal -->
+    <n-modal v-model:show="showShareModal" preset="card" :title="t.share?.title || 'Share'" style="max-width: 420px">
+      <div class="share-modal-content">
+        <div class="share-card-wrapper">
+          <ShareCard ref="shareCardRef" />
+        </div>
+        <div class="share-actions">
+          <n-button type="primary" :loading="isGenerating" @click="generateAndShare">
+            <template #icon><span>📤</span></template>
+            {{ isGenerating ? t.share?.generating : (canShare ? 'Share' : t.share?.download) }}
+          </n-button>
+        </div>
+      </div>
+    </n-modal>
 
     <!-- Sticker Wall Modal -->
     <n-modal v-model:show="showStickerWall" preset="card" :title="t.stickerWall.title" style="max-width: 600px">
@@ -112,7 +130,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { NModal, useDialog } from 'naive-ui'
+import { NModal, NButton, useDialog } from 'naive-ui'
+import html2canvas from 'html2canvas'
 import { useUserStore } from '../stores/user'
 import { useStatsStore } from '../stores/stats'
 import { useStickersStore } from '../stores/stickers'
@@ -127,6 +146,7 @@ import FeatureCard from './FeatureCard.vue'
 import DailyChallengeCard from './DailyChallengeCard.vue'
 import WrongQuestionsCard from './WrongQuestionsCard.vue'
 import StickerShowcase from './StickerShowcase.vue'
+import ShareCard from './ShareCard.vue'
 
 const emit = defineEmits(['startGame', 'openShop', 'openDailyChallenge', 'openWrongQuestions'])
 
@@ -142,6 +162,10 @@ const t = computed(() => localeStore.t)
 
 const showStickerWall = ref(false)
 const showStats = ref(false)
+const showShareModal = ref(false)
+const shareCardRef = ref(null)
+const isGenerating = ref(false)
+const canShare = typeof navigator !== 'undefined' && !!navigator.share
 
 const decorations = [
   { top: '5%', left: '5%', fontSize: '20px', animationDelay: '0s' },
@@ -182,6 +206,50 @@ function confirmReset() {
 
 function openShop() {
   emit('openShop')
+}
+
+function handleShare() {
+  showShareModal.value = true
+}
+
+async function generateAndShare() {
+  if (!shareCardRef.value?.cardRef) return
+
+  isGenerating.value = true
+
+  try {
+    const canvas = await html2canvas(shareCardRef.value.cardRef, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null
+    })
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
+    const file = new File([blob], 'mathhero-progress.png', { type: 'image/png' })
+
+    // Try Web Share API first
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        title: t.value.share?.title || 'My MathHero Progress',
+        files: [file]
+      })
+    } else {
+      // Fallback: download the image
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'mathhero-progress.png'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    }
+  } catch (err) {
+    console.error('Share failed:', err)
+  } finally {
+    isGenerating.value = false
+  }
 }
 </script>
 
@@ -243,11 +311,21 @@ function openShop() {
 .avatar-card {
   background: white;
   border-radius: 28px;
-  padding: 32px 24px;
-  text-align: center;
+  padding: 24px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.info-section {
+  flex: 1;
+  text-align: left;
 }
 
 .avatar-card.princess {
@@ -276,8 +354,7 @@ function openShop() {
 
 .avatar-wrapper {
   position: relative;
-  display: inline-block;
-  margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
 .home-avatar {
@@ -318,14 +395,14 @@ function openShop() {
 }
 
 .welcome-text {
-  font-size: 18px;
+  font-size: 14px;
   color: #888;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   font-weight: 500;
 }
 
 .user-name-display {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 8px;
 }
@@ -338,29 +415,6 @@ function openShop() {
   color: #4A90D9;
 }
 
-.role-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.avatar-card.princess .role-badge {
-  background: linear-gradient(135deg, #FFE4EC, #FFB6C1);
-  color: #FF1493;
-}
-
-.avatar-card.prince .role-badge {
-  background: linear-gradient(135deg, #DBEAFE, #87CEEB);
-  color: #1E90FF;
-}
-
-.badge-icon {
-  font-size: 16px;
-}
 
 /* Challenge Row */
 .challenge-row {
@@ -534,6 +588,12 @@ function openShop() {
 }
 
 
+.share-btn:hover {
+  border-color: var(--primary-color, #FF69B4);
+  color: var(--primary-color, #FF69B4);
+  background: var(--light-color, #FFF0F5);
+}
+
 .reset-btn:hover {
   border-color: #e74c3c;
   color: #e74c3c;
@@ -544,6 +604,25 @@ function openShop() {
   font-size: 16px;
 }
 
+/* Share Modal */
+.share-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.share-card-wrapper {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.share-actions {
+  display: flex;
+  gap: 12px;
+}
+
 /* Responsive - Tablet */
 @media (max-width: 768px) {
   .home-screen {
@@ -552,13 +631,13 @@ function openShop() {
   }
 
   .avatar-card {
-    padding: 28px 20px;
+    padding: 20px;
     border-radius: 24px;
   }
 
   .home-avatar {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
   }
 
   .stats-row {
@@ -604,13 +683,13 @@ function openShop() {
     display: none;
   }
 
-  .avatar-wrapper {
-    margin-bottom: 12px;
+  .card-content {
+    gap: 16px;
   }
 
   .home-avatar {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
   }
 
   .avatar-ring {
@@ -622,22 +701,12 @@ function openShop() {
   }
 
   .welcome-text {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .user-name-display {
-    font-size: 24px;
-    margin-bottom: 6px;
-  }
-
-  .role-badge {
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 16px;
-  }
-
-  .badge-icon {
-    font-size: 14px;
+    font-size: 20px;
+    margin-bottom: 4px;
   }
 
   /* Challenge Row */
@@ -705,21 +774,20 @@ function openShop() {
   }
 
   .avatar-card {
-    padding: 16px 12px;
+    padding: 12px;
+  }
+
+  .card-content {
+    gap: 12px;
   }
 
   .home-avatar {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
   }
 
   .user-name-display {
-    font-size: 20px;
-  }
-
-  .role-badge {
-    padding: 5px 10px;
-    font-size: 11px;
+    font-size: 18px;
   }
 
   .stats-row {
@@ -743,21 +811,12 @@ function openShop() {
   }
 
   .avatar-card {
-    padding: 16px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-    text-align: left;
-  }
-
-  .avatar-wrapper {
-    margin-bottom: 0;
+    padding: 12px 16px;
   }
 
   .home-avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
   }
 
   .avatar-ring {
@@ -765,18 +824,12 @@ function openShop() {
   }
 
   .welcome-text {
-    font-size: 12px;
-    margin-bottom: 2px;
+    font-size: 11px;
   }
 
   .user-name-display {
-    font-size: 18px;
-    margin-bottom: 4px;
-  }
-
-  .role-badge {
-    padding: 4px 8px;
-    font-size: 10px;
+    font-size: 16px;
+    margin-bottom: 2px;
   }
 
   .stats-row {

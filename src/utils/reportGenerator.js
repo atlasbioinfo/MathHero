@@ -79,13 +79,14 @@ export async function generateReport({ username, gender, stats, progress, t }) {
 
   yPos += 10
 
-  const operations = ['addition', 'subtraction', 'multiplication', 'division', 'fraction']
+  // Fraction disabled for now
+  const operations = ['addition', 'subtraction', 'multiplication', 'division']
   const operationNames = {
     addition: 'Addition (+)',
     subtraction: 'Subtraction (-)',
     multiplication: 'Multiplication (x)',
-    division: 'Division (/)',
-    fraction: 'Fractions'
+    division: 'Division (/)'
+    // fraction: 'Fractions'
   }
 
   operations.forEach((op, index) => {

@@ -133,14 +133,14 @@
               :class="{ active: activeSettingsTab === 'accessibility' }"
               @click="activeSettingsTab = 'accessibility'"
             >
-              ♿ {{ t.accessibility?.title || 'Accessibility' }}
+              ⚙️ {{ t.accessibility?.title || 'Settings' }}
             </button>
             <button
-              class="tab-btn parent-tab"
-              :class="{ active: activeSettingsTab === 'parent' }"
-              @click="openParentSettings"
+              class="tab-btn"
+              :class="{ active: activeSettingsTab === 'advanced' }"
+              @click="activeSettingsTab = 'advanced'"
             >
-              🔐 {{ t.customDifficulty?.title || 'Parent' }}
+              🎛️ {{ t.customDifficulty?.title || 'Advanced' }}
             </button>
           </div>
 
@@ -150,85 +150,102 @@
             <DarkModeSettings v-if="activeSettingsTab === 'display'" />
             <AccessibilitySettings v-if="activeSettingsTab === 'accessibility'" />
 
-            <!-- Parent Settings (requires PIN) -->
-            <div v-if="activeSettingsTab === 'parent'" class="parent-settings">
-              <div v-if="parentSettingsUnlocked" class="parent-settings-content">
-                <h3 class="settings-title">{{ t.customDifficulty?.title || 'Parent Settings' }}</h3>
+            <!-- Advanced Settings -->
+            <div v-if="activeSettingsTab === 'advanced'" class="advanced-settings">
+              <h3 class="settings-title">{{ t.customDifficulty?.title || 'Advanced Settings' }}</h3>
 
-                <!-- Questions per round -->
-                <div class="setting-group">
-                  <label class="setting-label">{{ t.customDifficulty?.questionsPerRound || 'Questions per Round' }}</label>
-                  <div class="range-input">
-                    <input
-                      type="range"
-                      min="5"
-                      max="20"
-                      :value="customDifficultyStore.questionsPerRound"
-                      @input="customDifficultyStore.updateSettings({ questionsPerRound: parseInt($event.target.value) })"
-                    />
-                    <span class="range-value">{{ customDifficultyStore.questionsPerRound }}</span>
-                  </div>
+              <!-- Questions per round -->
+              <div class="setting-group">
+                <label class="setting-label">{{ t.customDifficulty?.questionsPerRound || 'Questions per Round' }}</label>
+                <div class="range-input">
+                  <input
+                    type="range"
+                    min="5"
+                    max="20"
+                    :value="customDifficultyStore.questionsPerRound"
+                    @input="customDifficultyStore.updateSettings({ questionsPerRound: parseInt($event.target.value) })"
+                  />
+                  <span class="range-value">{{ customDifficultyStore.questionsPerRound }}</span>
                 </div>
-
-                <!-- Show hints toggle -->
-                <div class="setting-group">
-                  <div class="setting-row">
-                    <div class="setting-info">
-                      <span class="setting-label">{{ t.customDifficulty?.showHints || 'Show Hints' }}</span>
-                      <span class="setting-desc">{{ t.customDifficulty?.showHintsDesc || 'Show correct answer' }}</span>
-                    </div>
-                    <button
-                      class="toggle-switch"
-                      :class="{ on: customDifficultyStore.showHints }"
-                      @click="customDifficultyStore.updateSettings({ showHints: !customDifficultyStore.showHints })"
-                    >
-                      <span class="toggle-thumb"></span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Allow retry toggle -->
-                <div class="setting-group">
-                  <div class="setting-row">
-                    <div class="setting-info">
-                      <span class="setting-label">{{ t.customDifficulty?.allowRetry || 'Allow Retry' }}</span>
-                      <span class="setting-desc">{{ t.customDifficulty?.allowRetryDesc || 'Allow retry after wrong' }}</span>
-                    </div>
-                    <button
-                      class="toggle-switch"
-                      :class="{ on: customDifficultyStore.allowRetry }"
-                      @click="customDifficultyStore.updateSettings({ allowRetry: !customDifficultyStore.allowRetry })"
-                    >
-                      <span class="toggle-thumb"></span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Reset button -->
-                <button class="reset-btn" @click="customDifficultyStore.reset()">
-                  {{ t.customDifficulty?.resetSettings || 'Reset Settings' }}
-                </button>
               </div>
-              <div v-else class="parent-locked">
-                <div class="lock-icon">🔐</div>
-                <p>{{ t.customDifficulty?.enterPinDesc || 'Enter PIN to access' }}</p>
-                <button class="unlock-btn" @click="openParentSettings">
-                  {{ customDifficultyStore.isPinSet ? (t.customDifficulty?.enterPin || 'Enter PIN') : (t.customDifficulty?.setPin || 'Set PIN') }}
-                </button>
+
+              <!-- Show hints toggle -->
+              <div class="setting-group">
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <span class="setting-label">{{ t.customDifficulty?.showHints || 'Show Hints' }}</span>
+                    <span class="setting-desc">{{ t.customDifficulty?.showHintsDesc || 'Show correct answer' }}</span>
+                  </div>
+                  <button
+                    class="toggle-switch"
+                    :class="{ on: customDifficultyStore.showHints }"
+                    @click="customDifficultyStore.updateSettings({ showHints: !customDifficultyStore.showHints })"
+                  >
+                    <span class="toggle-thumb"></span>
+                  </button>
+                </div>
               </div>
+
+              <!-- Allow retry toggle -->
+              <div class="setting-group">
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <span class="setting-label">{{ t.customDifficulty?.allowRetry || 'Allow Retry' }}</span>
+                    <span class="setting-desc">{{ t.customDifficulty?.allowRetryDesc || 'Allow retry after wrong' }}</span>
+                  </div>
+                  <button
+                    class="toggle-switch"
+                    :class="{ on: customDifficultyStore.allowRetry }"
+                    @click="customDifficultyStore.updateSettings({ allowRetry: !customDifficultyStore.allowRetry })"
+                  >
+                    <span class="toggle-thumb"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Screen time limit -->
+              <div class="setting-group screen-time-group">
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <span class="setting-label">{{ t.customDifficulty?.screenTime || 'Screen Time Limit' }}</span>
+                    <span class="setting-desc">{{ t.customDifficulty?.screenTimeDesc || 'Daily play time limit' }}</span>
+                  </div>
+                  <button
+                    class="toggle-switch"
+                    :class="{ on: playTimeStore.isLimitEnabled }"
+                    @click="playTimeStore.setLimitEnabled(!playTimeStore.isLimitEnabled)"
+                  >
+                    <span class="toggle-thumb"></span>
+                  </button>
+                </div>
+                <div v-if="playTimeStore.isLimitEnabled" class="screen-time-details">
+                  <div class="time-limit-row">
+                    <span class="time-label">{{ t.customDifficulty?.minutesPerDay || 'Minutes per day' }}</span>
+                    <div class="time-selector">
+                      <button class="time-btn" @click="playTimeStore.setDailyLimit(playTimeStore.dailyLimitMinutes - 5)">-</button>
+                      <span class="time-value">{{ playTimeStore.dailyLimitMinutes }}</span>
+                      <button class="time-btn" @click="playTimeStore.setDailyLimit(playTimeStore.dailyLimitMinutes + 5)">+</button>
+                    </div>
+                  </div>
+                  <div class="today-progress">
+                    <span class="progress-label">{{ t.customDifficulty?.playedToday || 'Played today' }}: {{ playTimeStore.todayPlayTimeMinutes }} {{ t.customDifficulty?.minutes || 'min' }}</span>
+                    <div class="progress-bar-small">
+                      <div class="progress-fill-small" :style="{ width: `${playTimeStore.progressPercent}%` }"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reset button -->
+              <button class="reset-btn" @click="customDifficultyStore.reset()">
+                {{ t.customDifficulty?.resetSettings || 'Reset Settings' }}
+              </button>
             </div>
           </div>
         </div>
       </div>
     </Teleport>
 
-    <!-- Parent PIN Modal -->
-    <ParentPinModal
-      :show="showPinModal"
-      :is-setting-pin="isSettingPin"
-      @close="showPinModal = false"
-      @success="onPinSuccess"
-    />
   </div>
 </template>
 
@@ -249,8 +266,8 @@ import ConfirmModal from './ConfirmModal.vue'
 import AudioSettings from './AudioSettings.vue'
 import AccessibilitySettings from './AccessibilitySettings.vue'
 import DarkModeSettings from './DarkModeSettings.vue'
-import ParentPinModal from './ParentPinModal.vue'
 import { useCustomDifficultyStore } from '../stores/customDifficulty'
+import { usePlayTimeStore } from '../stores/playTime'
 
 const userStore = useUserStore()
 const localeStore = useLocaleStore()
@@ -262,6 +279,7 @@ const profilesStore = useProfilesStore()
 const audioStore = useAudioStore()
 const accessibilityStore = useAccessibilityStore()
 const customDifficultyStore = useCustomDifficultyStore()
+const playTimeStore = usePlayTimeStore()
 
 const baseUrl = import.meta.env.BASE_URL
 const showLanguageDropdown = ref(false)
@@ -271,9 +289,6 @@ const showDeleteConfirm = ref(false)
 const showSettingsModal = ref(false)
 const activeSettingsTab = ref('audio')
 const userToDelete = ref(null)
-const showPinModal = ref(false)
-const isSettingPin = ref(false)
-const parentSettingsUnlocked = ref(false)
 
 
 const t = computed(() => localeStore.t)
@@ -301,26 +316,8 @@ function openSettings() {
   showSettingsModal.value = true
 }
 
-function openParentSettings() {
-  if (customDifficultyStore.isPinSet) {
-    // Need to verify PIN first
-    isSettingPin.value = false
-    showPinModal.value = true
-  } else {
-    // No PIN set, prompt to set one
-    isSettingPin.value = true
-    showPinModal.value = true
-  }
-}
-
-function onPinSuccess() {
-  parentSettingsUnlocked.value = true
-  activeSettingsTab.value = 'parent'
-}
-
 function closeSettingsModal() {
   showSettingsModal.value = false
-  parentSettingsUnlocked.value = false
 }
 
 function handleLogout() {
@@ -907,16 +904,12 @@ onUnmounted(() => {
   color: var(--primary-color, #FF69B4);
 }
 
-/* Parent Settings */
-.parent-settings {
+/* Advanced Settings */
+.advanced-settings {
   padding: 16px;
 }
 
-.parent-settings-content {
-  text-align: left;
-}
-
-.parent-settings .settings-title {
+.advanced-settings .settings-title {
   font-size: 18px;
   font-weight: 700;
   color: #333;
@@ -924,17 +917,17 @@ onUnmounted(() => {
   text-align: center;
 }
 
-.parent-settings .setting-group {
+.advanced-settings .setting-group {
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
 
-.parent-settings .setting-group:last-of-type {
+.advanced-settings .setting-group:last-of-type {
   border-bottom: none;
 }
 
-.parent-settings .setting-label {
+.advanced-settings .setting-label {
   display: block;
   font-size: 14px;
   font-weight: 600;
@@ -942,18 +935,18 @@ onUnmounted(() => {
   margin-bottom: 8px;
 }
 
-.parent-settings .setting-row {
+.advanced-settings .setting-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.parent-settings .setting-info {
+.advanced-settings .setting-info {
   display: flex;
   flex-direction: column;
 }
 
-.parent-settings .setting-desc {
+.advanced-settings .setting-desc {
   font-size: 12px;
   color: #999;
 }
@@ -990,7 +983,7 @@ onUnmounted(() => {
   text-align: center;
 }
 
-.parent-settings .toggle-switch {
+.advanced-settings .toggle-switch {
   width: 50px;
   height: 28px;
   background: #ddd;
@@ -1001,11 +994,11 @@ onUnmounted(() => {
   transition: background 0.3s;
 }
 
-.parent-settings .toggle-switch.on {
+.advanced-settings .toggle-switch.on {
   background: var(--primary-color, #FF69B4);
 }
 
-.parent-settings .toggle-thumb {
+.advanced-settings .toggle-thumb {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -1017,11 +1010,97 @@ onUnmounted(() => {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.parent-settings .toggle-switch.on .toggle-thumb {
+.advanced-settings .toggle-switch.on .toggle-thumb {
   transform: translateX(22px);
 }
 
-.parent-settings .reset-btn {
+/* Screen Time Settings */
+.screen-time-group {
+  background: var(--light-color, #FFF5F8);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.screen-time-details {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--secondary-color, #FFB6C1);
+}
+
+.time-limit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.time-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.time-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary-color, #FF69B4);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.time-btn:hover {
+  transform: scale(1.1);
+}
+
+.time-btn:active {
+  transform: scale(0.95);
+}
+
+.time-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-color, #FF69B4);
+  min-width: 40px;
+  text-align: center;
+}
+
+.today-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: #888;
+}
+
+.progress-bar-small {
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill-small {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color, #FF69B4), var(--accent-color, #FF1493));
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.advanced-settings .reset-btn {
   width: 100%;
   padding: 12px;
   background: #f5f5f5;
@@ -1035,45 +1114,9 @@ onUnmounted(() => {
   margin-top: 16px;
 }
 
-.parent-settings .reset-btn:hover {
+.advanced-settings .reset-btn:hover {
   background: #eee;
   color: #333;
-}
-
-.parent-locked {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.parent-locked .lock-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-}
-
-.parent-locked p {
-  color: #666;
-  margin-bottom: 20px;
-}
-
-.unlock-btn {
-  padding: 12px 24px;
-  background: var(--primary-color, #FF69B4);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.unlock-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
-}
-
-.parent-tab {
-  color: #888;
 }
 
 @media (max-width: 500px) {

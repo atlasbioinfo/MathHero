@@ -102,13 +102,20 @@
           :go-text="localeStore.t.game?.go || 'GO!'"
           @complete="onCountdownComplete"
         />
+
+        <!-- Rest Reminder Modal -->
+        <RestReminderModal
+          :show="showRestReminder"
+          :played-minutes="playTimeStore.todayPlayTimeMinutes"
+          @close="handleRestReminderClose"
+        />
       </n-dialog-provider>
     </n-message-provider>
   </n-config-provider>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import {
   NConfigProvider,
   NMessageProvider,
@@ -118,6 +125,7 @@ import { useUserStore } from './stores/user'
 import { useGameStore } from './stores/game'
 import { useCoinsStore } from './stores/coins'
 import { useLocaleStore } from './stores/locale'
+import { usePlayTimeStore } from './stores/playTime'
 import { useTheme } from './composables/useTheme'
 import { generateQuestions } from './config/levels'
 import { backgroundThemes } from './config/shop'
@@ -134,6 +142,7 @@ import LevelSelect from './components/LevelSelect.vue'
 import GameScreen from './components/GameScreen.vue'
 import CoinDisplay from './components/CoinDisplay.vue'
 import AppFooter from './components/AppFooter.vue'
+import RestReminderModal from './components/RestReminderModal.vue'
 
 // Lazy loaded components (loaded on demand)
 const ResultScreen = defineAsyncComponent(() =>
@@ -153,9 +162,12 @@ const userStore = useUserStore()
 const gameStore = useGameStore()
 const coinsStore = useCoinsStore()
 const localeStore = useLocaleStore()
+const playTimeStore = usePlayTimeStore()
 const { themeOverrides, applyTheme, initDarkMode } = useTheme()
 
 const currentScreen = ref('home')
+const showRestReminder = ref(false)
+let playTimeInterval = null
 const selectedOperation = ref(null)
 const selectedLevel = ref(null)
 const showCountdown = ref(false)
@@ -273,9 +285,62 @@ function nextLevel() {
   startGame()
 }
 
+// Play time tracking
+function startPlayTimeTracking() {
+  if (playTimeInterval) return
+
+  playTimeStore.startPlaying()
+
+  // Check limit every 10 seconds
+  playTimeInterval = setInterval(() => {
+    playTimeStore.addPlayTime(10)
+
+    // Check if limit reached
+    if (playTimeStore.isLimitReached && !showRestReminder.value) {
+      showRestReminder.value = true
+      stopPlayTimeTracking()
+    }
+  }, 10000) // 10 seconds
+}
+
+function stopPlayTimeTracking() {
+  if (playTimeInterval) {
+    clearInterval(playTimeInterval)
+    playTimeInterval = null
+  }
+  playTimeStore.stopPlaying()
+}
+
+function handleRestReminderClose() {
+  showRestReminder.value = false
+  // Go back to home when rest reminder is closed
+  goHome()
+}
+
+// Watch for screen changes to track play time
+watch(currentScreen, (newScreen, oldScreen) => {
+  const playingScreens = ['playing', 'dailyChallenge']
+
+  if (playingScreens.includes(newScreen)) {
+    // Check if limit already reached before starting
+    if (playTimeStore.isLimitReached) {
+      showRestReminder.value = true
+      currentScreen.value = 'home'
+      return
+    }
+    startPlayTimeTracking()
+  } else if (playingScreens.includes(oldScreen)) {
+    stopPlayTimeTracking()
+  }
+})
+
 onMounted(() => {
   applyTheme()
   initDarkMode()
+})
+
+onUnmounted(() => {
+  stopPlayTimeTracking()
 })
 </script>
 

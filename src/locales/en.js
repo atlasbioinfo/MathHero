@@ -403,7 +403,7 @@ export default {
 
   // Accessibility
   accessibility: {
-    title: 'Accessibility',
+    title: 'Settings',
     fontSize: 'Font Size',
     reduceMotion: 'Reduce Motion',
     reduceMotionDesc: 'Disable animations',
@@ -460,13 +460,7 @@ export default {
 
   // Custom Difficulty
   customDifficulty: {
-    title: 'Parent Settings',
-    setPin: 'Set Parent PIN',
-    setPinDesc: 'Set a 4-digit PIN to access parent settings',
-    enterPin: 'Enter Parent PIN',
-    enterPinDesc: 'Enter your 4-digit PIN',
-    wrongPin: 'Wrong PIN',
-    invalidPin: 'Invalid PIN format',
+    title: 'Advanced',
     questionsPerRound: 'Questions per Round',
     showHints: 'Show Hints',
     showHintsDesc: 'Show correct answer after wrong response',
@@ -477,7 +471,21 @@ export default {
     min: 'Min',
     max: 'Max',
     resetSettings: 'Reset Settings',
-    changePin: 'Change PIN'
+    // Screen time
+    screenTime: 'Screen Time Limit',
+    screenTimeDesc: 'Daily play time limit',
+    screenTimeEnabled: 'Enable Limit',
+    minutesPerDay: 'Minutes per day',
+    playedToday: 'Played today',
+    minutes: 'min'
+  },
+
+  // Rest reminder
+  restReminder: {
+    title: 'Time to Rest!',
+    message: "You've played for {minutes} minutes today. It's time to take a break and rest your eyes!",
+    playedTime: 'Played today',
+    ok: 'OK, I\'ll rest'
   },
 
   // Report
@@ -497,5 +505,16 @@ export default {
     story: 'This app was born when I was doing math practice with my daughter and thought: "Wouldn\'t it be wonderful to have a fun, magical app to make learning math an adventure?" And so, the Math Kingdom was created! 🏰',
     callToAction: 'If you have ideas to make it better, please share them on GitHub! Wishing all little mathematicians great success! 🌟',
     feedback: 'Feedback & Suggestions'
+  },
+
+  // Share
+  share: {
+    button: 'Share Progress',
+    joinMe: 'Join me on MathHero!',
+    title: 'My MathHero Progress',
+    generating: 'Generating...',
+    success: 'Image ready!',
+    download: 'Download Image',
+    copied: 'Image saved!'
   }
 }

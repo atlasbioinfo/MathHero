@@ -219,7 +219,8 @@ const tabs = [
   { key: 'backgrounds', icon: '🌈' }
 ]
 
-const operations = ['addition', 'subtraction', 'multiplication', 'division', 'fraction']
+// Fraction disabled for now
+const operations = ['addition', 'subtraction', 'multiplication', 'division']
 
 const noLockedLevels = computed(() => {
   return operations.every(op => getLockedLevels(op).length === 0)

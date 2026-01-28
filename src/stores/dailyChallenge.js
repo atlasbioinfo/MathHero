@@ -5,6 +5,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { generateQuestions } from '../config/levels'
+import { useProgressStore } from './progress'
 
 /**
  * @typedef {Object} DailyChallengeState
@@ -67,18 +68,21 @@ export const useDailyChallengeStore = defineStore('dailyChallenge', () => {
   /**
    * Get today's challenge configuration
    * Uses date-based seeding for consistent questions per day
+   * Level is based on user's progress (unlockedLevel - 1, minimum 1)
    */
   const todayChallengeConfig = computed(() => {
     const seed = dateToSeed(today.value)
     const random = seededRandom(seed)
 
-    const operations = ['addition', 'subtraction', 'multiplication', 'division', 'fraction']
+    // Fraction disabled for now
+    const operations = ['addition', 'subtraction', 'multiplication', 'division']
     const operationIndex = Math.floor(random() * operations.length)
     const operation = operations[operationIndex]
 
-    // Level varies by day of week (1-6, with level 6 on weekends)
-    const dayOfWeek = new Date().getDay()
-    const level = dayOfWeek === 0 || dayOfWeek === 6 ? 6 : Math.min(dayOfWeek, 5)
+    // Level based on user's progress: unlockedLevel - 1, minimum 1
+    const progressStore = useProgressStore()
+    const userProgress = progressStore.getOperationProgress(operation)
+    const level = Math.max(1, userProgress.unlockedLevel - 1)
 
     return {
       operation,

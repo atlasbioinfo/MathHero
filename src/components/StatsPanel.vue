@@ -100,8 +100,8 @@ const operations = [
   { key: 'addition', icon: '✨' },
   { key: 'subtraction', icon: '✂️' },
   { key: 'multiplication', icon: '⭐' },
-  { key: 'division', icon: '🍕' },
-  { key: 'fraction', icon: '🍰' }
+  { key: 'division', icon: '🍕' }
+  // { key: 'fraction', icon: '🍰' } // Fraction disabled for now
 ]
 
 function getStats(opKey) {

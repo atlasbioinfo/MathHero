@@ -1,5 +1,11 @@
 <template>
   <div class="app-footer">
+    <!-- Visitor counter -->
+    <span class="visitor-count">
+      <span id="busuanzi_container_site_pv">
+        👥 <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
     <!-- Small trigger button -->
     <button class="about-trigger" @click="showModal = true">
       <span class="about-icon">ℹ️</span>
@@ -76,6 +82,14 @@ const showModal = ref(false)
   bottom: 12px;
   right: 12px;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.visitor-count {
+  font-size: 10px;
+  color: #aaa;
 }
 
 .about-trigger {
