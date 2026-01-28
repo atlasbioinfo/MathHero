@@ -210,7 +210,8 @@ export const operationConfig = {
       5: {
         descKey: 'multiplication_5',
         generator: () => {
-          const num1 = Math.floor(Math.random() * 31) + 20
+          // 20-40 × 2-9，结果最大360
+          const num1 = Math.floor(Math.random() * 21) + 20
           const num2 = Math.floor(Math.random() * 8) + 2
           return { num1, num2, answer: num1 * num2 }
         }
@@ -218,8 +219,9 @@ export const operationConfig = {
       6: {
         descKey: 'multiplication_6',
         generator: () => {
-          const num1 = Math.floor(Math.random() * 50) + 10
-          const num2 = Math.floor(Math.random() * 20) + 5
+          // 10-30 × 2-12，结果最大360，不涉及3位数乘法
+          const num1 = Math.floor(Math.random() * 21) + 10
+          const num2 = Math.floor(Math.random() * 11) + 2
           return { num1, num2, answer: num1 * num2 }
         }
       }
@@ -268,8 +270,9 @@ export const operationConfig = {
       5: {
         descKey: 'division_5',
         generator: () => {
-          const num2 = Math.floor(Math.random() * 9) + 2
-          const answer = Math.floor(Math.random() * 30) + 10
+          // 除数2-9，商10-25，被除数最大225
+          const num2 = Math.floor(Math.random() * 8) + 2
+          const answer = Math.floor(Math.random() * 16) + 10
           const num1 = num2 * answer
           return { num1, num2, answer }
         }
@@ -277,14 +280,16 @@ export const operationConfig = {
       6: {
         descKey: 'division_6',
         generator: () => {
-          const num2 = Math.floor(Math.random() * 12) + 2
-          const answer = Math.floor(Math.random() * 50) + 10
+          // 除数2-10，商10-30，被除数最大300，不涉及太大的数
+          const num2 = Math.floor(Math.random() * 9) + 2
+          const answer = Math.floor(Math.random() * 21) + 10
           const num1 = num2 * answer
           return { num1, num2, answer }
         }
       }
     }
-  },
+  }
+  /*
   fraction: {
     symbol: '/',
     icon: '🍰',
@@ -416,6 +421,7 @@ export const operationConfig = {
       }
     }
   }
+  */
 }
 
 /**
