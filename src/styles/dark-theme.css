@@ -227,6 +227,21 @@
   color: var(--dark-text-primary) !important;
 }
 
+/* Home screen user name */
+.dark-mode .user-name-display {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .avatar-card.princess .user-name-display,
+.dark-mode .avatar-card.prince .user-name-display {
+  color: var(--dark-text-primary) !important;
+}
+
+/* Dropdown user name in dark mode */
+.dark-mode .dropdown-user-name {
+  color: var(--dark-text-primary) !important;
+}
+
 .dark-mode .dropdown-header {
   background: linear-gradient(135deg, var(--dark-bg-secondary), var(--dark-bg-tertiary)) !important;
 }

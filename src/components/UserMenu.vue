@@ -873,23 +873,26 @@ onUnmounted(() => {
 
 .settings-tabs {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 2px solid #eee;
-  padding: 16px 16px 0;
-  gap: 8px;
+  padding: 12px 12px 0;
+  gap: 6px;
 }
 
 .tab-btn {
-  flex: 1;
-  padding: 12px 16px;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 10px 12px;
   background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #888;
   cursor: pointer;
   transition: all 0.2s;
-  border-radius: 12px 12px 0 0;
+  border-radius: 10px 10px 0 0;
+  white-space: nowrap;
 }
 
 .tab-btn:hover {
@@ -1094,12 +1097,26 @@ onUnmounted(() => {
   }
 
   .settings-tabs {
-    padding: 12px 12px 0;
+    padding: 10px 10px 0;
+    gap: 4px;
   }
 
   .tab-btn {
-    padding: 10px 12px;
-    font-size: 13px;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .settings-tabs {
+    padding: 8px 8px 0;
+    gap: 3px;
+  }
+
+  .tab-btn {
+    padding: 6px 8px;
+    font-size: 11px;
   }
 }
 </style>
