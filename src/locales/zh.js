@@ -127,7 +127,19 @@ export default {
     denominator: '分母',
     keyboardHint: '可使用键盘输入',
     fractionKeyboardHint: 'Tab或/切换分子分母',
-    retriedBadge: '重试'
+    retriedBadge: '重试',
+    go: '开始!'
+  },
+
+  // 贴纸展示
+  stickerShowcase: {
+    title: '我的收藏贴纸',
+    desc: '选择最多5个贴纸展示',
+    edit: '编辑',
+    owned: '购买的贴纸',
+    earned: '成就贴纸',
+    empty: '完成关卡赚取贴纸，或在商店购买！',
+    clear: '清空'
   },
 
   // 结果页面
@@ -220,7 +232,9 @@ export default {
   common: {
     back: '返回',
     close: '关闭',
-    loading: '加载中...'
+    loading: '加载中...',
+    cancel: '取消',
+    save: '保存'
   },
 
   // 用户菜单

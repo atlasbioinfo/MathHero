@@ -110,6 +110,7 @@ import { NButton, NProgress } from 'naive-ui'
 import { useGameStore } from '../stores/game'
 import { useUserStore } from '../stores/user'
 import { useLocaleStore } from '../stores/locale'
+import { useWrongQuestionsStore } from '../stores/wrongQuestions'
 import { operationConfig } from '../config/levels'
 import { useSound } from '../composables/useSound'
 import CuteClock from './CuteClock.vue'
@@ -128,6 +129,7 @@ const emit = defineEmits(['complete', 'quit'])
 const gameStore = useGameStore()
 const userStore = useUserStore()
 const localeStore = useLocaleStore()
+const wrongQuestionsStore = useWrongQuestionsStore()
 const { playCorrectSound, playWrongSound } = useSound()
 
 const t = computed(() => localeStore.t)
@@ -235,6 +237,14 @@ function handleAnswer(isCorrect, answer, correctAnswer) {
     playCorrectSound()
   } else {
     playWrongSound()
+    // Record wrong answer for review
+    wrongQuestionsStore.addWrongQuestion(
+      props.operation,
+      props.level,
+      currentQuestion.value,
+      answer,
+      correctAnswer
+    )
   }
 
   // Record answer and move to next question

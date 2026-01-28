@@ -127,7 +127,19 @@ export default {
     denominator: 'Bottom',
     keyboardHint: 'Keyboard input supported',
     fractionKeyboardHint: 'Tab or / to switch',
-    retriedBadge: 'Retried'
+    retriedBadge: 'Retried',
+    go: 'GO!'
+  },
+
+  // Sticker Showcase
+  stickerShowcase: {
+    title: 'My Favorite Stickers',
+    desc: 'Select up to 5 stickers to display',
+    edit: 'Edit',
+    owned: 'Purchased Stickers',
+    earned: 'Achievement Stickers',
+    empty: 'Earn stickers by completing levels or buy them in the shop!',
+    clear: 'Clear All'
   },
 
   // Result Screen
@@ -220,7 +232,9 @@ export default {
   common: {
     back: 'Back',
     close: 'Close',
-    loading: 'Loading...'
+    loading: 'Loading...',
+    cancel: 'Cancel',
+    save: 'Save'
   },
 
   // User Menu

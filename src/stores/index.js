@@ -3,7 +3,7 @@ import { createPinia } from 'pinia'
 const pinia = createPinia()
 
 // Stores that should be persisted per-user
-const userSpecificStores = ['user', 'progress', 'stats', 'stickers', 'coins']
+const userSpecificStores = ['user', 'progress', 'stats', 'stickers', 'coins', 'wrongQuestions']
 
 // Stores that are global (not per-user)
 const globalStores = ['locale', 'game']

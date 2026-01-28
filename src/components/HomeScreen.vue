@@ -27,6 +27,9 @@
           <span class="badge-icon">👑</span>
           {{ userStore.gender === 'prince' ? t.home.princeTitle : t.home.princessTitle }}
         </p>
+
+        <!-- Sticker Showcase -->
+        <StickerShowcase />
       </div>
     </div>
 
@@ -89,10 +92,6 @@
 
     <!-- Action Buttons -->
     <div class="action-section">
-      <button class="action-btn report-btn" @click="handleGenerateReport" :disabled="isGeneratingReport">
-        <span class="action-icon">📄</span>
-        {{ isGeneratingReport ? (t.report?.generating || 'Generating...') : (t.report?.generate || 'Generate Report') }}
-      </button>
       <button class="action-btn reset-btn" @click="confirmReset">
         <span class="action-icon">🔄</span>
         {{ t.home.reset }}
@@ -127,7 +126,7 @@ import StatCard from './StatCard.vue'
 import FeatureCard from './FeatureCard.vue'
 import DailyChallengeCard from './DailyChallengeCard.vue'
 import WrongQuestionsCard from './WrongQuestionsCard.vue'
-import { generateReport } from '../utils/reportGenerator'
+import StickerShowcase from './StickerShowcase.vue'
 
 const emit = defineEmits(['startGame', 'openShop', 'openDailyChallenge', 'openWrongQuestions'])
 
@@ -143,7 +142,6 @@ const t = computed(() => localeStore.t)
 
 const showStickerWall = ref(false)
 const showStats = ref(false)
-const isGeneratingReport = ref(false)
 
 const decorations = [
   { top: '5%', left: '5%', fontSize: '20px', animationDelay: '0s' },
@@ -184,30 +182,6 @@ function confirmReset() {
 
 function openShop() {
   emit('openShop')
-}
-
-async function handleGenerateReport() {
-  if (isGeneratingReport.value) return
-
-  isGeneratingReport.value = true
-  try {
-    await generateReport({
-      username: userStore.username,
-      gender: userStore.gender,
-      stats: {
-        totalQuestions: statsStore.totalQuestions,
-        overallAccuracy: statsStore.overallAccuracy,
-        streakDays: statsStore.streakDays,
-        operationStats: statsStore.operationStats
-      },
-      progress: progressStore.progress,
-      t: t.value
-    })
-  } catch (error) {
-    console.error('Failed to generate report:', error)
-  } finally {
-    isGeneratingReport.value = false
-  }
 }
 </script>
 
@@ -559,11 +533,6 @@ async function handleGenerateReport() {
   cursor: not-allowed;
 }
 
-.report-btn:hover:not(:disabled) {
-  border-color: var(--primary-color, #FF69B4);
-  color: var(--primary-color, #FF69B4);
-  background: var(--light-color, #FFF5F8);
-}
 
 .reset-btn:hover {
   border-color: #e74c3c;

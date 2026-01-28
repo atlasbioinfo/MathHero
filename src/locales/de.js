@@ -127,7 +127,19 @@ export default {
     denominator: 'Nenner',
     keyboardHint: 'Tastatureingabe möglich',
     fractionKeyboardHint: 'Tab oder / zum Wechseln',
-    retriedBadge: 'Wiederholt'
+    retriedBadge: 'Wiederholt',
+    go: 'LOS!'
+  },
+
+  // Sticker Showcase
+  stickerShowcase: {
+    title: 'Meine Lieblings-Sticker',
+    desc: 'Wähle bis zu 5 Sticker zum Anzeigen',
+    edit: 'Bearbeiten',
+    owned: 'Gekaufte Sticker',
+    earned: 'Erfolgs-Sticker',
+    empty: 'Verdiene Sticker durch Abschluss von Levels oder kaufe sie im Shop!',
+    clear: 'Alle löschen'
   },
 
   // Result Screen
@@ -220,7 +232,9 @@ export default {
   common: {
     back: 'Zurück',
     close: 'Schließen',
-    loading: 'Laden...'
+    loading: 'Laden...',
+    cancel: 'Abbrechen',
+    save: 'Speichern'
   },
 
   // User Menu

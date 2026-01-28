@@ -111,7 +111,7 @@
     </div>
 
     <!-- Purchase Confirmation Dialog -->
-    <n-modal v-model:show="showConfirmDialog" preset="card" style="max-width: 350px">
+    <n-modal v-model:show="showConfirmDialog" preset="card" style="max-width: 350px" :closable="false">
       <template #header>
         <span>{{ t.shop.confirmPurchase }}</span>
       </template>

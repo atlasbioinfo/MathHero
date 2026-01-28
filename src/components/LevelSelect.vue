@@ -56,7 +56,7 @@
     </div>
 
     <!-- Level Unlock Dialog -->
-    <n-modal v-model:show="showUnlockDialog" preset="card" style="max-width: 350px">
+    <n-modal v-model:show="showUnlockDialog" preset="card" style="max-width: 350px" :closable="false">
       <template #header>
         <span>🔓 {{ t.shop?.tabs?.levels || 'Unlock Level' }}</span>
       </template>

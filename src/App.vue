@@ -8,6 +8,9 @@
         <!-- Floating decorations -->
         <FloatingDecorations v-if="!userStore.isNewUser" />
 
+        <!-- Theme particles (animated effects for purchased themes) -->
+        <ThemeParticles v-if="!userStore.isNewUser && equippedBackground" />
+
         <!-- App Footer with privacy notice -->
         <AppFooter v-if="!userStore.isNewUser && currentScreen === 'home'" />
 
@@ -92,6 +95,13 @@
             />
           </div>
         </div>
+
+        <!-- Countdown Overlay -->
+        <CountdownOverlay
+          :show="showCountdown"
+          :go-text="localeStore.t.game?.go || 'GO!'"
+          @complete="onCountdownComplete"
+        />
       </n-dialog-provider>
     </n-message-provider>
   </n-config-provider>
@@ -107,12 +117,15 @@ import {
 import { useUserStore } from './stores/user'
 import { useGameStore } from './stores/game'
 import { useCoinsStore } from './stores/coins'
+import { useLocaleStore } from './stores/locale'
 import { useTheme } from './composables/useTheme'
 import { generateQuestions } from './config/levels'
 import { backgroundThemes } from './config/shop'
 
 // Eagerly loaded components (needed immediately)
 import FloatingDecorations from './components/FloatingDecorations.vue'
+import ThemeParticles from './components/ThemeParticles.vue'
+import CountdownOverlay from './components/CountdownOverlay.vue'
 import UserMenu from './components/UserMenu.vue'
 import GenderSelect from './components/GenderSelect.vue'
 import HomeScreen from './components/HomeScreen.vue'
@@ -139,11 +152,14 @@ const WrongQuestionsScreen = defineAsyncComponent(() =>
 const userStore = useUserStore()
 const gameStore = useGameStore()
 const coinsStore = useCoinsStore()
+const localeStore = useLocaleStore()
 const { themeOverrides, applyTheme, initDarkMode } = useTheme()
 
 const currentScreen = ref('home')
 const selectedOperation = ref(null)
 const selectedLevel = ref(null)
+const showCountdown = ref(false)
+const pendingGameStart = ref(null)
 
 // Get equipped background theme
 const equippedBackground = computed(() => {
@@ -220,9 +236,24 @@ function onLevelSelect(level) {
 }
 
 function startGame() {
-  const questions = generateQuestions(selectedOperation.value, selectedLevel.value, 10)
-  gameStore.startGame(selectedOperation.value, selectedLevel.value, questions)
-  currentScreen.value = 'playing'
+  // Show countdown before starting the game
+  pendingGameStart.value = {
+    operation: selectedOperation.value,
+    level: selectedLevel.value
+  }
+  showCountdown.value = true
+}
+
+function onCountdownComplete() {
+  showCountdown.value = false
+
+  if (pendingGameStart.value) {
+    const { operation, level } = pendingGameStart.value
+    const questions = generateQuestions(operation, level, 10)
+    gameStore.startGame(operation, level, questions)
+    currentScreen.value = 'playing'
+    pendingGameStart.value = null
+  }
 }
 
 function onGameComplete() {

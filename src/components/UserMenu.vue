@@ -82,11 +82,6 @@
       </div>
     </div>
 
-    <!-- Settings Button (always visible) -->
-    <div class="menu-item settings-btn" @click="openSettings">
-      <span class="menu-icon">⚙️</span>
-    </div>
-
     <AddUserModal
       :show="showAddUserModal"
       :title="t.userMenu.addUser"
@@ -796,15 +791,6 @@ onUnmounted(() => {
     width: 24px;
     height: 24px;
   }
-}
-
-/* Settings Button */
-.settings-btn {
-  padding: 8px 12px !important;
-}
-
-.settings-btn:hover {
-  background: var(--light-color, #FFF5F8);
 }
 
 /* Settings Modal */

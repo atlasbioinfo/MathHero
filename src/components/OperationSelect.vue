@@ -81,8 +81,9 @@ const operations = [
   { key: 'addition', symbol: '+', icon: '✨' },
   { key: 'subtraction', symbol: '−', icon: '✂️' },
   { key: 'multiplication', symbol: '×', icon: '⭐' },
-  { key: 'division', symbol: '÷', icon: '🍕' },
-  { key: 'fraction', symbol: '/', icon: '🍰' }
+  { key: 'division', symbol: '÷', icon: '🍕' }
+  // Fraction disabled for now
+  // { key: 'fraction', symbol: '/', icon: '🍰' }
 ]
 
 const stickerTypes = [

@@ -127,7 +127,19 @@ export default {
     denominator: 'Dénominateur',
     keyboardHint: 'Saisie clavier disponible',
     fractionKeyboardHint: 'Tab ou / pour changer',
-    retriedBadge: 'Réessayé'
+    retriedBadge: 'Réessayé',
+    go: 'C\'EST PARTI!'
+  },
+
+  // Sticker Showcase
+  stickerShowcase: {
+    title: 'Mes Autocollants Préférés',
+    desc: 'Sélectionne jusqu\'à 5 autocollants à afficher',
+    edit: 'Modifier',
+    owned: 'Autocollants Achetés',
+    earned: 'Autocollants de Réussite',
+    empty: 'Gagne des autocollants en complétant des niveaux ou achète-les dans la boutique !',
+    clear: 'Tout effacer'
   },
 
   // Result Screen
@@ -220,7 +232,9 @@ export default {
   common: {
     back: 'Retour',
     close: 'Fermer',
-    loading: 'Chargement...'
+    loading: 'Chargement...',
+    cancel: 'Annuler',
+    save: 'Enregistrer'
   },
 
   // User Menu

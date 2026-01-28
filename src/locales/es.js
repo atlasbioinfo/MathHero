@@ -127,7 +127,19 @@ export default {
     denominator: 'Denominador',
     keyboardHint: 'Entrada por teclado disponible',
     fractionKeyboardHint: 'Tab o / para cambiar',
-    retriedBadge: 'Reintentado'
+    retriedBadge: 'Reintentado',
+    go: '¡VAMOS!'
+  },
+
+  // Sticker Showcase
+  stickerShowcase: {
+    title: 'Mis Pegatinas Favoritas',
+    desc: 'Selecciona hasta 5 pegatinas para mostrar',
+    edit: 'Editar',
+    owned: 'Pegatinas Compradas',
+    earned: 'Pegatinas de Logros',
+    empty: '¡Gana pegatinas completando niveles o cómpralas en la tienda!',
+    clear: 'Borrar todo'
   },
 
   // Result Screen
@@ -220,7 +232,9 @@ export default {
   common: {
     back: 'Volver',
     close: 'Cerrar',
-    loading: 'Cargando...'
+    loading: 'Cargando...',
+    cancel: 'Cancelar',
+    save: 'Guardar'
   },
 
   // User Menu
