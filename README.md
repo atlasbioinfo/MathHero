@@ -1,8 +1,4 @@
-<p align="center">
-  <img src="public/icons/icon-192.png" alt="Math Kingdom" width="120" />
-</p>
-
-<h1 align="center">Math Kingdom</h1>
+<h1 align="center">🏰 Math Kingdom</h1>
 
 <p align="center">
   <strong>A magical math adventure for kids</strong>
