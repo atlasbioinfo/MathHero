@@ -1,11 +1,5 @@
 <template>
   <div class="app-footer">
-    <!-- Visitor counter -->
-    <span class="visitor-count">
-      <span id="busuanzi_container_site_pv">
-        👥 <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
     <!-- Small trigger button -->
     <button class="about-trigger" @click="showModal = true">
       <span class="about-icon">ℹ️</span>
@@ -62,6 +56,15 @@
         </div>
       </transition>
     </Teleport>
+
+    <!-- Visitor counter - bottom center -->
+    <Teleport to="body">
+      <div class="visitor-counter">
+        <span id="busuanzi_container_site_pv">
+          👥 <span id="busuanzi_value_site_pv"></span>
+        </span>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -76,20 +79,23 @@ const showModal = ref(false)
 </script>
 
 <style scoped>
+/* Visitor counter - bottom center */
+:global(.visitor-counter) {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #aaa;
+  z-index: 50;
+}
+
 /* Small trigger button */
 .app-footer {
   position: fixed;
   bottom: 12px;
   right: 12px;
   z-index: 100;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.visitor-count {
-  font-size: 10px;
-  color: #aaa;
 }
 
 .about-trigger {
