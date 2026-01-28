@@ -56,7 +56,11 @@
 
     <!-- Footer -->
     <div class="card-footer">
-      <span class="footer-text">{{ t.share?.joinMe || 'Join me on MathHero!' }}</span>
+      <div class="footer-left">
+        <span class="footer-text">{{ t.share?.joinMe || 'Join me on MathHero!' }}</span>
+        <span class="footer-url">atlasbioinfo.github.io/MathHero</span>
+      </div>
+      <img src="/MathHero/qr-code.png" alt="QR Code" class="qr-code" />
     </div>
   </div>
 </template>
@@ -270,14 +274,36 @@ defineExpose({ cardRef })
 
 /* Footer */
 .card-footer {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
   z-index: 1;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  padding: 12px 16px;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .footer-text {
   font-size: 14px;
   font-weight: 600;
+}
+
+.footer-url {
+  font-size: 11px;
+  color: #666;
+}
+
+.qr-code {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
 }
 
 .share-card.princess .footer-text {

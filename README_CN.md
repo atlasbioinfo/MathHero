@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/math_hero_logo.png" alt="MathHero Logo" width="120" />
+</p>
+
 <h1 align="center">MathHero</h1>
 
 <p align="center">
