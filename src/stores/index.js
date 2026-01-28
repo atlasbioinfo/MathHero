@@ -67,6 +67,30 @@ pinia.use(({ store }) => {
       }
     }
 
+    // For user store, sync from profiles if no saved state exists
+    if (storeId === 'user' && profileId) {
+      const currentState = store.$state
+      // If username/gender is null, try to get from profiles
+      if (!currentState.username || !currentState.gender) {
+        const profilesData = localStorage.getItem('mathGame_profiles')
+        if (profilesData) {
+          try {
+            const data = JSON.parse(profilesData)
+            const profile = data.profiles?.find(p => p.id === profileId)
+            if (profile) {
+              store.$patch({
+                username: profile.name || currentState.username,
+                gender: profile.gender || currentState.gender,
+                createdAt: profile.createdAt || currentState.createdAt
+              })
+            }
+          } catch (e) {
+            console.warn('Failed to sync user from profiles:', e)
+          }
+        }
+      }
+    }
+
     // Save on changes
     store.$subscribe((mutation, state) => {
       const currentProfileId = getCurrentProfileId()
