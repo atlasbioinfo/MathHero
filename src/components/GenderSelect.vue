@@ -58,7 +58,7 @@
             @click="selectedGender = 'prince'"
           >
             <div class="option-glow"></div>
-            <img src="/math_prince.png" alt="Prince" class="option-avatar" />
+            <img :src="`${baseUrl}math_prince.png`" alt="Prince" class="option-avatar" />
             <span class="option-label">{{ t.login.boy }}</span>
             <span class="option-check">✓</span>
           </div>
@@ -68,7 +68,7 @@
             @click="selectedGender = 'princess'"
           >
             <div class="option-glow"></div>
-            <img src="/math_princess.png" alt="Princess" class="option-avatar" />
+            <img :src="`${baseUrl}math_princess.png`" alt="Princess" class="option-avatar" />
             <span class="option-label">{{ t.login.girl }}</span>
             <span class="option-check">✓</span>
           </div>
@@ -112,6 +112,7 @@ const showError = ref(false)
 
 const t = computed(() => localeStore.t)
 const currentLocaleName = computed(() => getLocaleDisplayName(localeStore.currentLocale))
+const baseUrl = import.meta.env.BASE_URL
 
 const canSubmit = computed(() => username.value.trim().length > 0)
 

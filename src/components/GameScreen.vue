@@ -1,44 +1,24 @@
 <template>
   <div class="game-screen">
     <div class="game-header">
-      <!-- Quit Button -->
-      <button class="quit-btn" @click="showQuitConfirm = true" :title="t.game.quit">
-        ✕
-      </button>
-      <div class="level-badge">
-        {{ operationInfo.icon }} {{ levelName }}
-      </div>
+      <button class="quit-btn" @click="showQuitConfirm = true" :title="t.game.quit">✕</button>
+      <div class="level-badge">{{ operationInfo.icon }} {{ levelName }}</div>
       <div class="timer-container">
         <CuteClock :timeLeft="gameStore.timeLeft" />
-        <div class="timer" :class="{ warning: gameStore.timeLeft <= 30 }">
-          {{ formatTime(gameStore.timeLeft) }}
-        </div>
+        <div class="timer" :class="{ warning: gameStore.timeLeft <= 30 }">{{ formatTime(gameStore.timeLeft) }}</div>
       </div>
-      <div class="progress-info">
-        📝 {{ gameStore.currentQuestionIndex + 1 }} / {{ totalQuestions }}
-      </div>
+      <div class="progress-info">📝 {{ gameStore.currentQuestionIndex + 1 }} / {{ totalQuestions }}</div>
     </div>
 
-    <!-- Quit Confirmation Modal -->
-    <Teleport to="body">
-      <transition name="modal">
-        <div v-if="showQuitConfirm" class="modal-overlay" @click.self="showQuitConfirm = false">
-          <div class="modal-content quit-modal">
-            <div class="quit-icon">😢</div>
-            <h3 class="modal-title">{{ t.game.quitTitle }}</h3>
-            <p class="quit-message">{{ t.game.quitMessage }}</p>
-            <div class="modal-buttons">
-              <button class="continue-btn" @click="showQuitConfirm = false">
-                💪 {{ t.game.continueGame }}
-              </button>
-              <button class="quit-confirm-btn" @click="handleQuit">
-                🏠 {{ t.game.quitConfirm }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </transition>
-    </Teleport>
+    <QuitModal
+      :show="showQuitConfirm"
+      :title="t.game.quitTitle"
+      :message="t.game.quitMessage"
+      :continue-text="t.game.continueGame"
+      :confirm-text="t.game.quitConfirm"
+      @close="showQuitConfirm = false"
+      @confirm="handleQuit"
+    />
 
     <n-progress
       type="line"
@@ -65,21 +45,16 @@
 
         <!-- Fraction question -->
         <div v-else class="question-content fraction-question">
-          <div class="fraction-display">
-            <div class="fraction">
-              <span class="numerator">{{ currentQuestion.fraction1.numerator }}</span>
-              <span class="fraction-line"></span>
-              <span class="denominator">{{ currentQuestion.fraction1.denominator }}</span>
-            </div>
-          </div>
+          <FractionDisplay
+            :numerator="currentQuestion.fraction1.numerator"
+            :denominator="currentQuestion.fraction1.denominator"
+          />
           <span class="operator">{{ currentQuestion.operation }}</span>
-          <div v-if="currentQuestion.fraction2" class="fraction-display">
-            <div class="fraction">
-              <span class="numerator">{{ currentQuestion.fraction2.numerator }}</span>
-              <span class="fraction-line"></span>
-              <span class="denominator">{{ currentQuestion.fraction2.denominator }}</span>
-            </div>
-          </div>
+          <FractionDisplay
+            v-if="currentQuestion.fraction2"
+            :numerator="currentQuestion.fraction2.numerator"
+            :denominator="currentQuestion.fraction2.denominator"
+          />
           <span v-if="currentQuestion.integer" class="number">{{ currentQuestion.integer }}</span>
           <span class="equals">=</span>
           <span class="answer-box">?</span>
@@ -87,52 +62,22 @@
       </div>
 
       <div class="answer-section">
-        <!-- Regular answer input -->
+        <!-- Regular answer input with cute keyboard -->
         <template v-if="!isFraction">
-          <n-input-number
-            v-model:value="userAnswer"
-            :show-button="false"
+          <CuteKeyboard
+            v-model="userAnswer"
             :placeholder="t.game.yourAnswer"
-            size="large"
-            class="answer-input"
-            @keyup.enter="submitAnswer"
-            ref="answerInput"
+            @confirm="submitAnswer"
           />
         </template>
 
-        <!-- Fraction answer input -->
+        <!-- Fraction answer input with cute keyboard -->
         <template v-else>
-          <div class="fraction-input">
-            <n-input-number
-              v-model:value="fractionAnswer.numerator"
-              :show-button="false"
-              placeholder="↑"
-              size="large"
-              class="fraction-input-field"
-              @keyup.enter="submitAnswer"
-              ref="answerInput"
-            />
-            <div class="fraction-input-line"></div>
-            <n-input-number
-              v-model:value="fractionAnswer.denominator"
-              :show-button="false"
-              placeholder="↓"
-              size="large"
-              class="fraction-input-field"
-              @keyup.enter="submitAnswer"
-            />
-          </div>
+          <FractionKeyboard
+            v-model="fractionAnswer"
+            @confirm="submitAnswer"
+          />
         </template>
-
-        <n-button
-          type="primary"
-          size="large"
-          class="submit-btn"
-          @click="submitAnswer"
-          :disabled="!canSubmit"
-        >
-          {{ t.game.submit }} ✓
-        </n-button>
       </div>
 
       <!-- Retry button (shown after wrong answer) -->
@@ -164,14 +109,18 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { NInputNumber, NButton, NProgress } from 'naive-ui'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { NButton, NProgress } from 'naive-ui'
 import { useGameStore } from '../stores/game'
 import { useUserStore } from '../stores/user'
 import { useLocaleStore } from '../stores/locale'
 import { operationConfig } from '../config/levels'
 import { useSound } from '../composables/useSound'
 import CuteClock from './CuteClock.vue'
+import QuitModal from './QuitModal.vue'
+import FractionDisplay from './FractionDisplay.vue'
+import FractionKeyboard from './FractionKeyboard.vue'
+import CuteKeyboard from './CuteKeyboard.vue'
 
 const props = defineProps({
   operation: { type: String, required: true },
@@ -187,7 +136,6 @@ const { playCorrectSound, playWrongSound } = useSound()
 
 const t = computed(() => localeStore.t)
 const totalQuestions = 10
-const answerInput = ref(null)
 const userAnswer = ref(null)
 const fractionAnswer = ref({ numerator: null, denominator: null })
 const showFeedback = ref(false)
@@ -261,13 +209,8 @@ function stopTimer() {
 }
 
 function focusInput() {
-  nextTick(() => {
-    const input = answerInput.value?.$el?.querySelector('input')
-    if (input) {
-      input.focus()
-      input.select()
-    }
-  })
+  // CuteKeyboard and FractionKeyboard don't need traditional focus
+  // They use touch/click interactions
 }
 
 function submitAnswer() {
@@ -416,109 +359,6 @@ onUnmounted(() => {
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
 }
 
-/* Quit Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: 20px;
-}
-
-.modal-content {
-  background: linear-gradient(135deg, #fff 0%, #FFF5F8 100%);
-  border-radius: 24px;
-  padding: 30px;
-  max-width: 340px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  border: 2px solid rgba(255, 182, 193, 0.3);
-}
-
-.quit-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.modal-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--primary-color, #FF69B4);
-  margin: 0 0 12px;
-}
-
-.quit-message {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.modal-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.continue-btn, .quit-confirm-btn {
-  padding: 14px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.continue-btn {
-  background: linear-gradient(135deg, var(--primary-color, #FF69B4), var(--accent-color, #FF1493));
-  color: white;
-}
-
-.continue-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
-}
-
-.quit-confirm-btn {
-  background: #f5f5f5;
-  color: #666;
-}
-
-.quit-confirm-btn:hover {
-  background: #eee;
-}
-
-/* Modal Transitions */
-.modal-enter-active,
-.modal-leave-active {
-  transition: all 0.3s ease;
-}
-
-.modal-enter-active .modal-content,
-.modal-leave-active .modal-content {
-  transition: all 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-from .modal-content,
-.modal-leave-to .modal-content {
-  transform: scale(0.9) translateY(20px);
-  opacity: 0;
-}
-
 .level-badge, .progress-info {
   font-size: 16px;
   color: var(--primary-color, #FF69B4);
@@ -608,77 +448,12 @@ onUnmounted(() => {
   color: var(--primary-color, #FF69B4);
 }
 
-.fraction-display {
-  display: inline-block;
-}
-
-.fraction {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #f5f5f5;
-  padding: 10px 20px;
-  border-radius: 12px;
-}
-
-.numerator, .denominator {
-  font-size: 28px;
-  color: #333;
-}
-
-.fraction-line {
-  width: 100%;
-  height: 3px;
-  background: #333;
-  margin: 5px 0;
-}
-
 .answer-section {
   display: flex;
+  flex-direction: column;
   gap: 15px;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-}
-
-.answer-input {
-  width: 150px;
-}
-
-.answer-input :deep(.n-input) {
-  font-size: 24px !important;
-  text-align: center;
-  border-radius: 12px !important;
-}
-
-.answer-input :deep(.n-input__input-el) {
-  text-align: center !important;
-}
-
-.fraction-input {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.fraction-input-field {
-  width: 100px;
-}
-
-.fraction-input-field :deep(.n-input) {
-  font-size: 20px !important;
-  text-align: center;
-}
-
-.fraction-input-field :deep(.n-input__input-el) {
-  text-align: center !important;
-}
-
-.fraction-input-line {
-  width: 80px;
-  height: 3px;
-  background: var(--primary-color, #FF69B4);
 }
 
 .submit-btn {
@@ -879,15 +654,6 @@ onUnmounted(() => {
     gap: 10px;
   }
 
-  .answer-input {
-    width: 120px;
-  }
-
-  .answer-input :deep(.n-input) {
-    font-size: 20px !important;
-    border-radius: 10px !important;
-  }
-
   .submit-btn {
     padding: 0 20px !important;
     font-size: 14px !important;
@@ -919,29 +685,8 @@ onUnmounted(() => {
     border-radius: 16px;
   }
 
-  /* Fraction styles */
   .fraction-question {
     font-size: 18px;
-  }
-
-  .fraction {
-    padding: 8px 14px;
-  }
-
-  .numerator, .denominator {
-    font-size: 20px;
-  }
-
-  .fraction-input-field {
-    width: 80px;
-  }
-
-  .fraction-input-field :deep(.n-input) {
-    font-size: 18px !important;
-  }
-
-  .fraction-input-line {
-    width: 60px;
   }
 }
 
@@ -987,14 +732,6 @@ onUnmounted(() => {
 
   .operator {
     font-size: 24px;
-  }
-
-  .answer-input {
-    width: 100px;
-  }
-
-  .answer-input :deep(.n-input) {
-    font-size: 18px !important;
   }
 
   .feedback-content {

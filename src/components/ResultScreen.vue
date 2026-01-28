@@ -36,34 +36,15 @@
       </div>
 
       <!-- Coin Rewards -->
-      <div v-if="coinRewards && coinRewards.total > 0" class="coin-rewards">
-        <h3 class="coin-title">
-          <span class="coin-icon">🪙</span>
-          {{ t.coins.earned }}
-        </h3>
-        <div class="coin-breakdown">
-          <div class="coin-row" v-if="coinRewards.correctAnswers > 0">
-            <span>{{ t.coins.correctAnswers }}</span>
-            <span class="coin-value">+{{ coinRewards.correctAnswers }}</span>
-          </div>
-          <div class="coin-row" v-if="coinRewards.levelCompletion > 0">
-            <span>{{ t.coins.levelBonus }}</span>
-            <span class="coin-value">+{{ coinRewards.levelCompletion }}</span>
-          </div>
-          <div class="coin-row highlight" v-if="coinRewards.perfectScore > 0">
-            <span>{{ t.coins.perfectBonus }}</span>
-            <span class="coin-value">+{{ coinRewards.perfectScore }}</span>
-          </div>
-          <div class="coin-row highlight" v-if="coinRewards.noRetryBonus > 0">
-            <span>{{ t.coins.noRetryBonus }}</span>
-            <span class="coin-value">+{{ coinRewards.noRetryBonus }}</span>
-          </div>
-          <div class="coin-total">
-            <span>{{ t.coins.total }}</span>
-            <span class="total-value">🪙 {{ coinRewards.total }}</span>
-          </div>
-        </div>
-      </div>
+      <CoinRewards
+        :rewards="coinRewards"
+        :earned-text="t.coins.earned"
+        :correct-answers-text="t.coins.correctAnswers"
+        :level-bonus-text="t.coins.levelBonus"
+        :perfect-bonus-text="t.coins.perfectBonus"
+        :no-retry-bonus-text="t.coins.noRetryBonus"
+        :total-text="t.coins.total"
+      />
 
       <!-- Level passed message -->
       <div v-if="isLevelPassed && hasNextLevel" class="unlock-message">
@@ -150,6 +131,7 @@ import { useConfetti } from '../composables/useConfetti'
 import QuestionReview from './QuestionReview.vue'
 import CoinDisplay from './CoinDisplay.vue'
 import CoinAnimation from './CoinAnimation.vue'
+import CoinRewards from './CoinRewards.vue'
 
 const props = defineProps({
   operation: { type: String, required: true },
@@ -487,64 +469,6 @@ onMounted(async () => {
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
-}
-
-/* Coin Rewards */
-.coin-rewards {
-  background: linear-gradient(135deg, #FFF9E6, #FFE4B5);
-  border: 2px solid #FFD700;
-  border-radius: 16px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-.coin-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 16px;
-  color: #B8860B;
-  margin-bottom: 12px;
-}
-
-.coin-icon {
-  font-size: 20px;
-}
-
-.coin-breakdown {
-  font-size: 14px;
-}
-
-.coin-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  color: #666;
-}
-
-.coin-row.highlight {
-  color: #B8860B;
-  font-weight: 600;
-}
-
-.coin-value {
-  color: #52C41A;
-  font-weight: 600;
-}
-
-.coin-total {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 8px;
-  margin-top: 8px;
-  border-top: 1px dashed #FFD700;
-  font-weight: 700;
-  color: #B8860B;
-}
-
-.total-value {
-  font-size: 18px;
 }
 
 /* New Achievements */

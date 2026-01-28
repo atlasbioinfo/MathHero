@@ -6,6 +6,8 @@ export const useUserStore = defineStore('user', () => {
   const username = ref(null) // User's name
   const createdAt = ref(null)
 
+  const baseUrl = import.meta.env.BASE_URL
+
   const theme = computed(() => {
     if (gender.value === 'prince') {
       return {
@@ -16,7 +18,7 @@ export const useUserStore = defineStore('user', () => {
         light: '#F0F8FF',
         accent: '#1E90FF',
         mascot: '👦',
-        avatar: '/math_prince.png',
+        avatar: `${baseUrl}math_prince.png`,
         title: '数学小王子',
         decorations: ['⭐', '🚀', '🛡️', '⚡', '🌟', '🎯', '🏆', '💎', '🔥', '🌙']
       }
@@ -29,7 +31,7 @@ export const useUserStore = defineStore('user', () => {
       light: '#FFF5F8',
       accent: '#FF1493',
       mascot: '👧',
-      avatar: '/math_princess.png',
+      avatar: `${baseUrl}math_princess.png`,
       title: '数学小公主',
       decorations: ['🌸', '🌺', '🦋', '🌈', '💖', '🎀', '🍬', '✨', '💐', '🌷']
     }

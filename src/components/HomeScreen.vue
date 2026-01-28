@@ -32,42 +32,10 @@
 
     <!-- Stats Cards Row -->
     <div class="stats-row">
-      <div class="stat-card flame">
-        <div class="stat-icon-wrapper">
-          <span class="stat-emoji">🔥</span>
-        </div>
-        <div class="stat-info">
-          <span class="stat-value">{{ statsStore.streakDays }}</span>
-          <span class="stat-label">{{ t.home.streakDays }}</span>
-        </div>
-      </div>
-      <div class="stat-card questions">
-        <div class="stat-icon-wrapper">
-          <span class="stat-emoji">📝</span>
-        </div>
-        <div class="stat-info">
-          <span class="stat-value">{{ statsStore.totalQuestions }}</span>
-          <span class="stat-label">{{ t.home.totalQuestions }}</span>
-        </div>
-      </div>
-      <div class="stat-card accuracy">
-        <div class="stat-icon-wrapper">
-          <span class="stat-emoji">🎯</span>
-        </div>
-        <div class="stat-info">
-          <span class="stat-value">{{ statsStore.overallAccuracy }}%</span>
-          <span class="stat-label">{{ t.home.accuracy }}</span>
-        </div>
-      </div>
-      <div class="stat-card stickers">
-        <div class="stat-icon-wrapper">
-          <span class="stat-emoji">🏅</span>
-        </div>
-        <div class="stat-info">
-          <span class="stat-value">{{ stickersStore.getEarnedCount() }}/{{ stickersStore.getTotalCount() }}</span>
-          <span class="stat-label">{{ t.home.stickers }}</span>
-        </div>
-      </div>
+      <StatCard type="flame" icon="🔥" :value="statsStore.streakDays" :label="t.home.streakDays" />
+      <StatCard type="questions" icon="📝" :value="statsStore.totalQuestions" :label="t.home.totalQuestions" />
+      <StatCard type="accuracy" icon="🎯" :value="`${statsStore.overallAccuracy}%`" :label="t.home.accuracy" />
+      <StatCard type="stickers" icon="🏅" :value="`${stickersStore.getEarnedCount()}/${stickersStore.getTotalCount()}`" :label="t.home.stickers" />
     </div>
 
     <!-- Main Action Button -->
@@ -80,34 +48,17 @@
 
     <!-- Feature Cards Grid -->
     <div class="feature-grid">
-      <!-- Sticker Wall Card -->
-      <div class="feature-card sticker-card" @click="showStickerWall = true">
-        <div class="feature-icon">🏆</div>
-        <div class="feature-content">
-          <h3 class="feature-title">{{ t.home.stickerWall }}</h3>
-          <div class="sticker-mini-grid">
-            <span
-              v-for="sticker in recentStickers.slice(0, 6)"
-              :key="sticker.id"
-              class="mini-sticker"
-              :class="{ earned: stickersStore.hasSticker(sticker.id) }"
-            >
-              {{ sticker.icon }}
-            </span>
-          </div>
+      <FeatureCard type="sticker" icon="🏆" :title="t.home.stickerWall" @click="showStickerWall = true">
+        <div class="sticker-mini-grid">
+          <span
+            v-for="sticker in recentStickers.slice(0, 6)"
+            :key="sticker.id"
+            class="mini-sticker"
+            :class="{ earned: stickersStore.hasSticker(sticker.id) }"
+          >{{ sticker.icon }}</span>
         </div>
-        <span class="feature-arrow">→</span>
-      </div>
-
-      <!-- Stats Card -->
-      <div class="feature-card stats-card" @click="showStats = true">
-        <div class="feature-icon">📊</div>
-        <div class="feature-content">
-          <h3 class="feature-title">{{ t.home.stats }}</h3>
-          <p class="feature-desc">{{ t.home.subtitle }}</p>
-        </div>
-        <span class="feature-arrow">→</span>
-      </div>
+      </FeatureCard>
+      <FeatureCard type="stats" icon="📊" :title="t.home.stats" :description="t.home.subtitle" @click="showStats = true" />
     </div>
 
     <!-- Reset Button -->
@@ -142,6 +93,8 @@ import { useCoinsStore } from '../stores/coins'
 import StickerWall from './StickerWall.vue'
 import StatsPanel from './StatsPanel.vue'
 import CoinDisplay from './CoinDisplay.vue'
+import StatCard from './StatCard.vue'
+import FeatureCard from './FeatureCard.vue'
 
 const emit = defineEmits(['startGame', 'openShop'])
 
@@ -377,51 +330,6 @@ function openShop() {
   margin-bottom: 24px;
 }
 
-.stat-card {
-  background: white;
-  border-radius: 16px;
-  padding: 16px 8px;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border: 2px solid #f0f0f0;
-  transition: all 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-}
-
-.stat-card.flame { border-color: #FFCDD2; }
-.stat-card.questions { border-color: #C8E6C9; }
-.stat-card.accuracy { border-color: #BBDEFB; }
-.stat-card.stickers { border-color: #FFE0B2; }
-
-.stat-icon-wrapper {
-  margin-bottom: 8px;
-}
-
-.stat-emoji {
-  font-size: 28px;
-}
-
-.stat-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.stat-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-}
-
-.stat-label {
-  font-size: 11px;
-  color: #999;
-}
-
 /* Main Action Button */
 .main-action-btn {
   width: 100%;
@@ -485,59 +393,6 @@ function openShop() {
   margin-bottom: 24px;
 }
 
-.feature-card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: 2px solid #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-}
-
-.sticker-card {
-  border-color: #FFE0B2;
-}
-
-.sticker-card:hover {
-  border-color: #FFB74D;
-}
-
-.stats-card {
-  border-color: #C8E6C9;
-}
-
-.stats-card:hover {
-  border-color: #81C784;
-}
-
-.feature-icon {
-  font-size: 32px;
-}
-
-.feature-content {
-  flex: 1;
-}
-
-.feature-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.feature-desc {
-  font-size: 12px;
-  color: #999;
-}
-
 .sticker-mini-grid {
   display: flex;
   gap: 6px;
@@ -553,12 +408,6 @@ function openShop() {
 .mini-sticker.earned {
   opacity: 1;
   filter: none;
-}
-
-.feature-arrow {
-  font-size: 20px;
-  color: #ccc;
-  align-self: center;
 }
 
 /* Reset Section */
@@ -609,10 +458,6 @@ function openShop() {
 
   .stats-row {
     gap: 10px;
-  }
-
-  .stat-card {
-    padding: 14px 6px;
   }
 }
 
@@ -697,27 +542,6 @@ function openShop() {
     margin-bottom: 16px;
   }
 
-  .stat-card {
-    padding: 12px 6px;
-    border-radius: 14px;
-  }
-
-  .stat-icon-wrapper {
-    margin-bottom: 6px;
-  }
-
-  .stat-emoji {
-    font-size: 22px;
-  }
-
-  .stat-value {
-    font-size: 16px;
-  }
-
-  .stat-label {
-    font-size: 10px;
-  }
-
   /* Main Button */
   .main-action-btn {
     padding: 16px 20px;
@@ -742,39 +566,11 @@ function openShop() {
     margin-bottom: 16px;
   }
 
-  .feature-card {
-    padding: 16px;
-    border-radius: 16px;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .feature-icon {
-    font-size: 28px;
-  }
-
-  .feature-content {
-    flex: 1;
-  }
-
-  .feature-title {
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-
-  .feature-desc {
-    font-size: 11px;
-  }
-
   .sticker-mini-grid {
     gap: 4px;
   }
 
   .mini-sticker {
-    font-size: 16px;
-  }
-
-  .feature-arrow {
     font-size: 16px;
   }
 
@@ -818,38 +614,9 @@ function openShop() {
     gap: 6px;
   }
 
-  .stat-card {
-    padding: 10px 4px;
-    border-radius: 12px;
-  }
-
-  .stat-emoji {
-    font-size: 20px;
-  }
-
-  .stat-value {
-    font-size: 14px;
-  }
-
-  .stat-label {
-    font-size: 9px;
-  }
-
   .main-action-btn {
     padding: 14px 16px;
     font-size: 16px;
-  }
-
-  .feature-card {
-    padding: 14px 12px;
-  }
-
-  .feature-icon {
-    font-size: 24px;
-  }
-
-  .feature-title {
-    font-size: 14px;
   }
 }
 
@@ -903,18 +670,6 @@ function openShop() {
   .stats-row {
     grid-template-columns: repeat(4, 1fr);
     margin-bottom: 12px;
-  }
-
-  .stat-card {
-    padding: 8px 4px;
-  }
-
-  .stat-emoji {
-    font-size: 18px;
-  }
-
-  .stat-value {
-    font-size: 14px;
   }
 
   .main-action-btn {

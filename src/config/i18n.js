@@ -125,7 +125,9 @@ export const messages = {
       quitTitle: 'Take a break?',
       quitMessage: 'Your progress in this round will not be saved. Want to continue practicing?',
       continueGame: 'Keep Going!',
-      quitConfirm: 'Take a Break'
+      quitConfirm: 'Take a Break',
+      numerator: 'Top',
+      denominator: 'Bottom'
     },
 
     // Result Screen
@@ -519,7 +521,9 @@ export const messages = {
       quitTitle: '休息一下？',
       quitMessage: '本轮的进度不会被保存哦。要继续练习吗？',
       continueGame: '继续加油！',
-      quitConfirm: '先休息一下'
+      quitConfirm: '先休息一下',
+      numerator: '分子',
+      denominator: '分母'
     },
 
     // 结果页面
