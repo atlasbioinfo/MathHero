@@ -35,7 +35,7 @@
         {{ t.shop.owned }}
       </div>
       <div v-else class="price-badge" :class="{ unaffordable: !canAfford }">
-        <span class="coin-icon">🪙</span>
+        <CoinIcon :size="13" />
         {{ frame.price }}
       </div>
     </div>
@@ -46,6 +46,7 @@
 import { computed } from 'vue'
 import { useCoinsStore } from '../../stores/coins'
 import { useLocaleStore } from '../../stores/locale'
+import CoinIcon from '../CoinIcon.vue'
 
 const props = defineProps({
   frame: { type: Object, required: true }

@@ -5,7 +5,7 @@
     @click="handleClick"
     ref="coinDisplayRef"
   >
-    <span class="coin-icon">🪙</span>
+    <img :src="coinIconSrc" class="coin-icon" alt="coin" />
     <span class="coin-amount" :class="{ animating: isAnimating }">
       {{ displayAmount }}
     </span>
@@ -43,6 +43,9 @@ const emit = defineEmits(['click'])
 
 const coinsStore = useCoinsStore()
 const coinDisplayRef = ref(null)
+
+const baseUrl = import.meta.env.BASE_URL
+const coinIconSrc = computed(() => `${baseUrl}coin.svg`)
 
 const displayAmount = ref(coinsStore.balance)
 const isAnimating = ref(false)
@@ -138,13 +141,15 @@ onMounted(() => {
 }
 
 .coin-icon {
-  font-size: 20px;
+  width: 24px;
+  height: 24px;
   animation: coinSpin 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 2px #FFD700) saturate(1.3) brightness(1.1);
+  filter: drop-shadow(0 0 3px #FFD700);
 }
 
 .coin-display.large .coin-icon {
-  font-size: 28px;
+  width: 32px;
+  height: 32px;
 }
 
 @keyframes coinSpin {
@@ -199,7 +204,8 @@ onMounted(() => {
   }
 
   .coin-icon {
-    font-size: 16px;
+    width: 20px;
+    height: 20px;
   }
 
   .coin-amount {
@@ -216,7 +222,8 @@ onMounted(() => {
   }
 
   .coin-display.large .coin-icon {
-    font-size: 22px;
+    width: 26px;
+    height: 26px;
   }
 
   .coin-display.large .coin-amount {

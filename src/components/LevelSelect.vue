@@ -35,7 +35,7 @@
         <div v-if="level > progress.unlockedLevel" class="lock-overlay" :class="{ purchasable: levelUnlockPrices[level] }">
           <span class="lock-icon">🔒</span>
           <div v-if="levelUnlockPrices[level]" class="unlock-price">
-            <span class="coin-icon">🪙</span>
+            <CoinIcon :size="14" />
             {{ levelUnlockPrices[level] }}
           </div>
         </div>
@@ -65,7 +65,7 @@
         <div class="unlock-level-name">{{ t.levels.level }} {{ levelToUnlock }}</div>
         <div class="unlock-level-title">{{ levelToUnlock ? getLevelName(levelToUnlock) : '' }}</div>
         <div class="unlock-price-display">
-          <span class="coin-icon">🪙</span>
+          <CoinIcon :size="24" />
           <span class="price-amount">{{ levelToUnlock ? getUnlockPrice(levelToUnlock) : 0 }}</span>
         </div>
         <div class="current-balance">
@@ -99,6 +99,7 @@ import { operationConfig, levelIcons } from '../config/levels'
 import { levelUnlockPrices } from '../config/shop'
 import { useSound } from '../composables/useSound'
 import { useConfetti } from '../composables/useConfetti'
+import CoinIcon from './CoinIcon.vue'
 
 const props = defineProps({
   operation: {

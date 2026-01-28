@@ -426,10 +426,4 @@ html, body, #app {
     overflow-y: auto;
   }
 }
-
-/* 全局金币样式 */
-.coin-icon {
-  filter: drop-shadow(0 0 3px #FFD700) saturate(1.4) brightness(1.15);
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-}
 </style>

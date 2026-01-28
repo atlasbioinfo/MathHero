@@ -1,7 +1,7 @@
 <template>
   <div v-if="rewards && rewards.total > 0" class="coin-rewards">
     <h3 class="coin-title">
-      <span class="coin-icon">🪙</span>
+      <CoinIcon :size="20" />
       {{ earnedText }}
     </h3>
     <div class="coin-breakdown">
@@ -23,13 +23,15 @@
       </div>
       <div class="coin-total">
         <span>{{ totalText }}</span>
-        <span class="total-value">🪙 {{ rewards.total }}</span>
+        <span class="total-value"><CoinIcon :size="18" /> {{ rewards.total }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import CoinIcon from './CoinIcon.vue'
+
 defineProps({
   rewards: { type: Object, default: null },
   earnedText: { type: String, required: true },
@@ -58,10 +60,6 @@ defineProps({
   font-size: 16px;
   color: #B8860B;
   margin-bottom: 12px;
-}
-
-.coin-icon {
-  font-size: 20px;
 }
 
 .coin-breakdown {

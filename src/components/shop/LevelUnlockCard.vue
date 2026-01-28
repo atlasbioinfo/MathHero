@@ -20,7 +20,7 @@
       {{ t.shop.unlocked }}
     </div>
     <div v-else class="price-badge" :class="{ unaffordable: !canAfford }">
-      <span class="coin-icon">🪙</span>
+      <CoinIcon :size="16" />
       {{ price }}
     </div>
   </div>
@@ -34,6 +34,7 @@ import { useUserStore } from '../../stores/user'
 import { useLocaleStore } from '../../stores/locale'
 import { levelIcons } from '../../config/levels'
 import { levelUnlockPrices } from '../../config/shop'
+import CoinIcon from '../CoinIcon.vue'
 
 const props = defineProps({
   operation: { type: String, required: true },

@@ -54,7 +54,7 @@
       <h3 class="rewards-title">{{ t.dailyChallenge?.rewards || 'Rewards' }}</h3>
       <div class="reward-items">
         <div class="reward-item">
-          <span class="reward-icon">🪙</span>
+          <CoinIcon :size="20" class="reward-icon" />
           <span class="reward-text">3x {{ t.coins?.correctAnswers || 'per correct' }}</span>
         </div>
         <div class="reward-item" v-if="challengeStore.currentStreak >= 2">
@@ -82,6 +82,7 @@ import { useDailyChallengeStore } from '../stores/dailyChallenge'
 import { useLocaleStore } from '../stores/locale'
 import { useUserStore } from '../stores/user'
 import { operationConfig, levelIcons } from '../config/levels'
+import CoinIcon from './CoinIcon.vue'
 
 const emit = defineEmits(['back', 'start'])
 

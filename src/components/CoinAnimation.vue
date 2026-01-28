@@ -1,18 +1,21 @@
 <template>
   <div class="coin-animation-container" ref="containerRef">
-    <div
+    <img
       v-for="coin in activeCoins"
       :key="coin.id"
+      :src="coinIconSrc"
       class="flying-coin"
       :style="coin.style"
-    >
-      🪙
-    </div>
+      alt="coin"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onUnmounted } from 'vue'
+import { ref, reactive, computed, onUnmounted } from 'vue'
+
+const baseUrl = import.meta.env.BASE_URL
+const coinIconSrc = computed(() => `${baseUrl}coin.svg`)
 
 const props = defineProps({
   targetSelector: {
@@ -145,11 +148,11 @@ defineExpose({
 
 .flying-coin {
   position: absolute;
-  font-size: 28px;
+  width: 32px;
+  height: 32px;
   animation: flyToTarget 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   animation-delay: var(--delay, 0ms);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 6px #FFD700) saturate(1.4) brightness(1.15);
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 6px #FFD700);
 }
 
 @keyframes flyToTarget {
@@ -173,7 +176,8 @@ defineExpose({
 /* Mobile - smaller coins */
 @media (max-width: 500px) {
   .flying-coin {
-    font-size: 22px;
+    width: 26px;
+    height: 26px;
   }
 }
 </style>

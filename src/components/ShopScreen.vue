@@ -121,7 +121,7 @@
           <span class="confirm-name">{{ pendingPurchase?.name }}</span>
         </div>
         <div class="confirm-price">
-          <span class="coin-icon">🪙</span>
+          <CoinIcon :size="24" />
           {{ pendingPurchase?.price }}
         </div>
         <div class="balance-after">
@@ -145,11 +145,11 @@
         <div class="total-stats">
           <div class="stat">
             <span class="stat-label">{{ t.shop.totalEarned }}:</span>
-            <span class="stat-value earn">🪙 {{ coinsStore.totalEarned }}</span>
+            <span class="stat-value earn"><CoinIcon :size="16" /> {{ coinsStore.totalEarned }}</span>
           </div>
           <div class="stat">
             <span class="stat-label">{{ t.shop.totalSpent }}:</span>
-            <span class="stat-value spend">🪙 {{ coinsStore.totalSpent }}</span>
+            <span class="stat-value spend"><CoinIcon :size="16" /> {{ coinsStore.totalSpent }}</span>
           </div>
         </div>
         <div v-if="coinsStore.transactionHistory.length === 0" class="empty-transactions">
@@ -190,6 +190,7 @@ import {
 } from '../config/shop'
 
 import CoinDisplay from './CoinDisplay.vue'
+import CoinIcon from './CoinIcon.vue'
 import LevelUnlockCard from './shop/LevelUnlockCard.vue'
 import StickerShopCard from './shop/StickerShopCard.vue'
 import FrameShopCard from './shop/FrameShopCard.vue'
