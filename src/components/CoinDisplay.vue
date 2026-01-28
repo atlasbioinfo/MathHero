@@ -140,6 +140,7 @@ onMounted(() => {
 .coin-icon {
   font-size: 20px;
   animation: coinSpin 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 2px #FFD700) saturate(1.3) brightness(1.1);
 }
 
 .coin-display.large .coin-icon {

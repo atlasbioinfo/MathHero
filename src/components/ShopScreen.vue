@@ -1,16 +1,19 @@
 <template>
   <div class="shop-screen">
     <div class="shop-header">
-      <n-button quaternary circle @click="$emit('back')">
-        <template #icon>
-          <span style="font-size: 24px">←</span>
-        </template>
-      </n-button>
+      <div class="header-left">
+        <n-button quaternary circle @click="$emit('back')">
+          <template #icon>
+            <span style="font-size: 24px">←</span>
+          </template>
+        </n-button>
+        <CoinDisplay clickable @click="showTransactions = true" />
+      </div>
       <h2 class="shop-title">
         <span class="shop-icon">🏪</span>
         {{ t.shop.title }}
       </h2>
-      <CoinDisplay clickable @click="showTransactions = true" />
+      <div class="header-spacer"></div>
     </div>
 
     <!-- Tab Navigation -->
@@ -376,6 +379,17 @@ function formatDate(dateStr) {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.header-spacer {
+  flex: 1;
 }
 
 .shop-title {

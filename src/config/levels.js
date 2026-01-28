@@ -252,8 +252,8 @@ export const operationConfig = {
         generator: () => {
           const num2 = Math.floor(Math.random() * 9) + 2
           const answer = (Math.floor(Math.random() * 9) + 1) * 10
-          const num1 = num2 * (answer / 10) * 10
-          return { num1: answer, num2, answer: answer / num2 }
+          const num1 = num2 * answer
+          return { num1, num2, answer }
         }
       },
       4: {

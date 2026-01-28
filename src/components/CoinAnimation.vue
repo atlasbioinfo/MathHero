@@ -148,7 +148,8 @@ defineExpose({
   font-size: 28px;
   animation: flyToTarget 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   animation-delay: var(--delay, 0ms);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 6px #FFD700) saturate(1.4) brightness(1.15);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
 @keyframes flyToTarget {

@@ -253,6 +253,16 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 禁用 iOS 双击放大 */
+html {
+  touch-action: manipulation;
+}
+
+button, a, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
 }
 
 /* Global Coin Display */
@@ -415,5 +425,11 @@ html, body, #app {
     height: calc(100vh - 8px);
     overflow-y: auto;
   }
+}
+
+/* 全局金币样式 */
+.coin-icon {
+  filter: drop-shadow(0 0 3px #FFD700) saturate(1.4) brightness(1.15);
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
 }
 </style>
