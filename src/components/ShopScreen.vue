@@ -374,6 +374,8 @@ function formatDate(dateStr) {
   margin: 0 auto;
   padding: 20px;
   padding-bottom: 40px;
+  position: relative;
+  z-index: 2;
 }
 
 .shop-header {
