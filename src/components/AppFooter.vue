@@ -57,9 +57,9 @@
       </transition>
     </Teleport>
 
-    <!-- Visitor counter - bottom center -->
+    <!-- Visitor counter - bottom center (hidden if busuanzi fails to load) -->
     <Teleport to="body">
-      <div class="visitor-counter">
+      <div class="visitor-counter" v-show="showVisitorCount">
         <span id="busuanzi_container_site_pv">
           👥 <span id="busuanzi_value_site_pv"></span>
         </span>
@@ -69,13 +69,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useLocaleStore } from '../stores/locale'
 
 const localeStore = useLocaleStore()
 const t = computed(() => localeStore.t)
 
 const showModal = ref(false)
+const showVisitorCount = ref(false)
+
+// Check if busuanzi loaded successfully after a delay
+onMounted(() => {
+  setTimeout(() => {
+    const pv = document.getElementById('busuanzi_value_site_pv')
+    if (pv && pv.textContent && pv.textContent.trim() !== '') {
+      showVisitorCount.value = true
+    }
+  }, 3000)
+})
 </script>
 
 <style scoped>

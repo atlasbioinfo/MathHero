@@ -16,7 +16,15 @@ import { ref, computed } from 'vue'
  * @property {number} wrongCount - Number of times answered wrong
  * @property {string} lastWrongAt - ISO timestamp of last wrong answer
  * @property {string} addedAt - ISO timestamp when first added
+ * @property {number} correctStreak - Consecutive correct answers (for Ebbinghaus)
+ * @property {string|null} nextReviewAt - ISO timestamp for next review (null = ready for review)
  */
+
+/**
+ * Ebbinghaus review intervals (in days)
+ * After 3 consecutive correct answers, the question is removed
+ */
+const REVIEW_INTERVALS = [1, 3] // After 1st correct: 1 day, after 2nd: 3 days, after 3rd: remove
 
 export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
   // State
@@ -72,10 +80,12 @@ export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
     const existing = questions.value.find(q => q.id === id)
 
     if (existing) {
-      // Update existing entry
+      // Update existing entry - reset correct streak since they got it wrong again
       existing.wrongCount++
       existing.lastWrongAt = new Date().toISOString()
       existing.userAnswer = userAnswer // Store most recent wrong answer
+      existing.correctStreak = 0 // Reset streak on wrong answer
+      existing.nextReviewAt = null // Make it available for review immediately
     } else {
       // Add new entry
       questions.value.push({
@@ -87,7 +97,9 @@ export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
         correctAnswer,
         wrongCount: 1,
         lastWrongAt: new Date().toISOString(),
-        addedAt: new Date().toISOString()
+        addedAt: new Date().toISOString(),
+        correctStreak: 0,
+        nextReviewAt: null
       })
     }
 
@@ -111,13 +123,39 @@ export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
   }
 
   /**
-   * Get questions for practice (sorted by wrong count)
+   * Check if a question is due for review
+   * @param {WrongQuestion} question - The question to check
+   * @returns {boolean} True if due for review
+   */
+  function isDueForReview(question) {
+    if (!question.nextReviewAt) return true // Never reviewed or just added
+    return new Date(question.nextReviewAt) <= new Date()
+  }
+
+  /**
+   * Get questions that are due for review (available now)
+   * @returns {WrongQuestion[]} Questions ready for review
+   */
+  const dueQuestions = computed(() => {
+    return questions.value.filter(isDueForReview)
+  })
+
+  /**
+   * Count of questions due for review
+   */
+  const dueCount = computed(() => dueQuestions.value.length)
+
+  /**
+   * Get questions for practice (only those due for review, sorted by wrong count)
    * @param {number} [count=10] - Number of questions to get
    * @returns {WrongQuestion[]} Questions for practice
    */
   function getQuestionsForPractice(count = 10) {
+    // Only get questions that are due for review
+    const available = questions.value.filter(isDueForReview)
+
     // Sort by wrong count (most wrong first) then by recency
-    const sorted = [...questions.value].sort((a, b) => {
+    const sorted = available.sort((a, b) => {
       if (b.wrongCount !== a.wrongCount) {
         return b.wrongCount - a.wrongCount
       }
@@ -145,10 +183,35 @@ export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
 
   /**
    * Record a correct answer for a previously wrong question
+   * Uses Ebbinghaus spaced repetition: hide after correct, show again after interval
+   * After 3 consecutive correct answers, remove from list
    * @param {string} id - Question ID
+   * @returns {Object} Result with action taken and next review info
    */
   function recordCorrectAnswer(id) {
-    removeQuestion(id)
+    const question = questions.value.find(q => q.id === id)
+    if (!question) return { action: 'not_found' }
+
+    question.correctStreak = (question.correctStreak || 0) + 1
+
+    if (question.correctStreak >= 3) {
+      // Mastered! Remove from wrong questions
+      removeQuestion(id)
+      return { action: 'mastered', streak: 3 }
+    }
+
+    // Schedule next review based on Ebbinghaus intervals
+    const intervalDays = REVIEW_INTERVALS[question.correctStreak - 1] || 1
+    const nextReview = new Date()
+    nextReview.setDate(nextReview.getDate() + intervalDays)
+    question.nextReviewAt = nextReview.toISOString()
+
+    return {
+      action: 'scheduled',
+      streak: question.correctStreak,
+      nextReviewAt: question.nextReviewAt,
+      intervalDays
+    }
   }
 
   function reset() {
@@ -162,6 +225,8 @@ export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
     totalCount,
     questionsByOperation,
     hasQuestions,
+    dueQuestions,
+    dueCount,
     // Actions
     addWrongQuestion,
     removeQuestion,
@@ -169,6 +234,7 @@ export const useWrongQuestionsStore = defineStore('wrongQuestions', () => {
     getQuestionsByOperation,
     clearAll,
     recordCorrectAnswer,
+    isDueForReview,
     reset
   }
 })

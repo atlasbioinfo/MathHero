@@ -43,6 +43,7 @@ export const useCoinsStore = defineStore('coins', () => {
   const purchasedItems = ref([])
   const equippedFrame = ref(null)
   const equippedBackground = ref(null)
+  const equippedAvatar = ref(null)
 
   // Computed
   const transactionHistory = computed(() => {
@@ -148,6 +149,12 @@ export const useCoinsStore = defineStore('coins', () => {
     return true
   }
 
+  function equipAvatar(avatarId) {
+    if (avatarId && !hasPurchasedItem(avatarId)) return false
+    equippedAvatar.value = avatarId
+    return true
+  }
+
   function reset() {
     balance.value = 0
     totalEarned.value = 0
@@ -156,6 +163,7 @@ export const useCoinsStore = defineStore('coins', () => {
     purchasedItems.value = []
     equippedFrame.value = null
     equippedBackground.value = null
+    equippedAvatar.value = null
   }
 
   return {
@@ -167,6 +175,7 @@ export const useCoinsStore = defineStore('coins', () => {
     purchasedItems,
     equippedFrame,
     equippedBackground,
+    equippedAvatar,
     // Computed
     transactionHistory,
     // Actions
@@ -178,6 +187,7 @@ export const useCoinsStore = defineStore('coins', () => {
     getPurchasedItemsByType,
     equipFrame,
     equipBackground,
+    equipAvatar,
     reset
   }
 })

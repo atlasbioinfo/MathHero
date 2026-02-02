@@ -300,10 +300,17 @@ export default {
       levelComplete: 'Nivel completado'
     },
     stickerSeries: {
-      special: 'Serie Especial',
-      animals: 'Amigos Animales',
-      food: 'Comida Deliciosa',
-      sports: 'Diversión Deportiva'
+      unicorns: 'Unicornios',
+      special: 'Especial',
+      ocean: 'Océano',
+      space: 'Espacio',
+      sweets: 'Dulces',
+      animals: 'Animales',
+      food: 'Comida',
+      sports: 'Deportes',
+      nature: 'Naturaleza',
+      fantasy: 'Fantasía',
+      celebration: 'Fiesta'
     },
     stickers: {
       rainbow: 'Arcoíris',

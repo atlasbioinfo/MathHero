@@ -19,7 +19,7 @@
         </div>
         <div class="card-content">
           <div class="avatar-wrapper">
-            <img :src="userStore.theme.avatar" alt="avatar" class="home-avatar" />
+            <img :src="currentAvatar" alt="avatar" class="home-avatar" />
             <div class="avatar-ring"></div>
           </div>
           <div class="info-section">
@@ -138,6 +138,7 @@ import { useStickersStore } from '../stores/stickers'
 import { useProgressStore } from '../stores/progress'
 import { useLocaleStore } from '../stores/locale'
 import { useCoinsStore } from '../stores/coins'
+import { purchasableAvatars } from '../config/shop'
 import StickerWall from './StickerWall.vue'
 import StatsPanel from './StatsPanel.vue'
 import CoinDisplay from './CoinDisplay.vue'
@@ -159,6 +160,18 @@ const coinsStore = useCoinsStore()
 const dialog = useDialog()
 
 const t = computed(() => localeStore.t)
+const baseUrl = import.meta.env.BASE_URL
+
+// Get current avatar (equipped or default)
+const currentAvatar = computed(() => {
+  if (coinsStore.equippedAvatar) {
+    const equipped = purchasableAvatars.find(a => a.id === coinsStore.equippedAvatar)
+    if (equipped) {
+      return `${baseUrl}${equipped.image}`
+    }
+  }
+  return userStore.theme.avatar
+})
 
 const showStickerWall = ref(false)
 const showStats = ref(false)

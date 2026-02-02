@@ -5,11 +5,14 @@
         <!-- User Menu (top right) -->
         <UserMenu v-if="!userStore.isNewUser" />
 
-        <!-- Floating decorations -->
-        <FloatingDecorations v-if="!userStore.isNewUser" />
+        <!-- Custom theme background layer -->
+        <div v-if="equippedBackground" class="theme-background" :style="backgroundStyle"></div>
 
         <!-- Theme particles (animated effects for purchased themes) -->
         <ThemeParticles v-if="!userStore.isNewUser && equippedBackground" />
+
+        <!-- Floating decorations -->
+        <FloatingDecorations v-if="!userStore.isNewUser" />
 
         <!-- App Footer with privacy notice -->
         <AppFooter v-if="!userStore.isNewUser && currentScreen === 'home'" />
@@ -23,8 +26,8 @@
         </div>
 
         <!-- App frame -->
-        <div class="app-frame" :class="userStore.theme.name">
-          <div class="app-container" :style="equippedBackground ? backgroundStyle : {}" :class="{ 'custom-bg': equippedBackground }">
+        <div class="app-frame" :class="[userStore.theme.name, { 'custom-theme': equippedBackground }]">
+          <div class="app-container" :class="{ 'custom-bg': equippedBackground }">
             <!-- Gender Selection (First time) -->
             <GenderSelect
               v-if="userStore.isNewUser"
@@ -80,6 +83,8 @@
               v-else-if="currentScreen === 'playing'"
               :operation="selectedOperation"
               :level="selectedLevel"
+              :is-review-mode="isReviewMode"
+              :review-questions="reviewQuestionIds"
               @complete="onGameComplete"
               @quit="onGameQuit"
             />
@@ -172,6 +177,8 @@ const selectedOperation = ref(null)
 const selectedLevel = ref(null)
 const showCountdown = ref(false)
 const pendingGameStart = ref(null)
+const isReviewMode = ref(false)
+const reviewQuestionIds = ref([])
 
 // Get equipped background theme
 const equippedBackground = computed(() => {
@@ -228,6 +235,10 @@ function startWrongQuestionsPractice(wrongQuestions) {
   selectedOperation.value = firstQ.operation
   selectedLevel.value = firstQ.level
 
+  // Set review mode and store question IDs for tracking correct answers
+  isReviewMode.value = true
+  reviewQuestionIds.value = wrongQuestions.map(wq => wq.id)
+
   const questions = wrongQuestions.map(wq => wq.question)
   gameStore.startGame(firstQ.operation, firstQ.level, questions)
   currentScreen.value = 'playing'
@@ -262,6 +273,9 @@ function onCountdownComplete() {
   if (pendingGameStart.value) {
     const { operation, level } = pendingGameStart.value
     const questions = generateQuestions(operation, level, 10)
+    // Reset review mode for normal game
+    isReviewMode.value = false
+    reviewQuestionIds.value = []
     gameStore.startGame(operation, level, questions)
     currentScreen.value = 'playing'
     pendingGameStart.value = null
@@ -416,6 +430,8 @@ html, body, #app {
     #FF1493
   );
   border-radius: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .app-frame.prince {
@@ -431,7 +447,6 @@ html, body, #app {
 .app-container {
   min-height: calc(100vh - 12px);
   min-height: calc(-webkit-fill-available - 12px);
-  background: linear-gradient(135deg, var(--light-color) 0%, var(--background-color) 50%, var(--light-color) 100%);
   border-radius: 16px;
   position: relative;
   z-index: 1;
@@ -440,13 +455,37 @@ html, body, #app {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Default background for app container */
+.app-container:not(.custom-bg) {
+  background: linear-gradient(135deg, var(--light-color) 0%, var(--background-color) 50%, var(--light-color) 100%);
+}
+
 /* Theme-specific backgrounds */
-.app-frame.princess .app-container {
+.app-frame.princess .app-container:not(.custom-bg) {
   background: linear-gradient(135deg, #FFF5F8 0%, #FFF0F5 50%, #FFE4EC 100%);
 }
 
-.app-frame.prince .app-container {
+.app-frame.prince .app-container:not(.custom-bg) {
   background: linear-gradient(135deg, #F0F8FF 0%, #E6F3FF 50%, #DBEAFE 100%);
+}
+
+/* Custom theme background layer */
+.theme-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Custom background: make app-frame and app-container transparent */
+.app-frame.custom-theme {
+  background: transparent !important;
+}
+
+.app-container.custom-bg {
+  background: transparent !important;
 }
 
 /* Better touch targets for mobile */

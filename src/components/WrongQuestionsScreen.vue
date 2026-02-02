@@ -19,19 +19,31 @@
       <p class="empty-desc">{{ t.wrongQuestions?.emptyDesc || 'No mistakes to review!' }}</p>
     </div>
 
+    <!-- All reviewed, waiting for next review -->
+    <div v-else-if="wrongQuestionsStore.dueCount === 0" class="empty-state">
+      <div class="empty-icon">⏰</div>
+      <h3 class="empty-title">{{ t.wrongQuestions?.allReviewed || 'All Reviewed!' }}</h3>
+      <p class="empty-desc">{{ t.wrongQuestions?.waitingDesc || 'Come back later for more practice.' }}</p>
+      <p class="waiting-count">{{ t.wrongQuestions?.waitingCount?.replace('{count}', wrongQuestionsStore.totalCount) || `${wrongQuestionsStore.totalCount} question(s) waiting` }}</p>
+    </div>
+
     <!-- Questions List -->
     <template v-else>
       <div class="stats-bar">
         <div class="stat-item">
-          <span class="stat-value">{{ wrongQuestionsStore.totalCount }}</span>
-          <span class="stat-label">{{ t.wrongQuestions?.count?.replace('{count}', '') || 'Total' }}</span>
+          <span class="stat-value">{{ wrongQuestionsStore.dueCount }}</span>
+          <span class="stat-label">{{ t.wrongQuestions?.dueNow || 'Due Now' }}</span>
+        </div>
+        <div class="stat-item secondary">
+          <span class="stat-value">{{ wrongQuestionsStore.totalCount - wrongQuestionsStore.dueCount }}</span>
+          <span class="stat-label">{{ t.wrongQuestions?.waiting || 'Waiting' }}</span>
         </div>
       </div>
 
-      <!-- Questions by Operation -->
+      <!-- Questions by Operation (only show due questions) -->
       <div class="questions-by-op">
         <div
-          v-for="(questions, operation) in wrongQuestionsStore.questionsByOperation"
+          v-for="(questions, operation) in dueQuestionsByOperation"
           :key="operation"
           class="operation-section"
         >
@@ -65,8 +77,11 @@
                 <span class="wrong-answer">✗ {{ formatAnswer(item.userAnswer) }}</span>
                 <span class="correct-answer">✓ {{ formatAnswer(item.correctAnswer) }}</span>
               </div>
-              <div class="wrong-count">
-                × {{ item.wrongCount }}
+              <div class="review-status">
+                <span v-if="item.correctStreak > 0" class="streak-badge">
+                  ✓{{ item.correctStreak }}/3
+                </span>
+                <span class="wrong-count">× {{ item.wrongCount }}</span>
               </div>
             </div>
             <div v-if="questions.length > 5" class="more-indicator">
@@ -101,6 +116,18 @@ const userStore = useUserStore()
 const dialog = useDialog()
 
 const t = computed(() => localeStore.t)
+
+// Group due questions by operation
+const dueQuestionsByOperation = computed(() => {
+  const grouped = {}
+  wrongQuestionsStore.dueQuestions.forEach(q => {
+    if (!grouped[q.operation]) {
+      grouped[q.operation] = []
+    }
+    grouped[q.operation].push(q)
+  })
+  return grouped
+})
 
 function getOperationIcon(operation) {
   return operationConfig[operation]?.icon || '➕'
@@ -208,6 +235,7 @@ function startPractice() {
 .stats-bar {
   display: flex;
   justify-content: center;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -217,6 +245,14 @@ function startPractice() {
   padding: 12px 24px;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stat-item.secondary {
+  background: #f5f5f5;
+}
+
+.stat-item.secondary .stat-value {
+  color: #999;
 }
 
 .stat-value {
@@ -304,6 +340,21 @@ function startPractice() {
   color: #52C41A;
 }
 
+.review-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.streak-badge {
+  background: #E8F5E9;
+  color: #4CAF50;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .wrong-count {
   background: #FFEBE9;
   color: #FF6B6B;
@@ -311,6 +362,12 @@ function startPractice() {
   border-radius: 8px;
   font-size: 12px;
   font-weight: 700;
+}
+
+.waiting-count {
+  font-size: 14px;
+  color: #999;
+  margin-top: 12px;
 }
 
 .more-indicator {

@@ -272,12 +272,15 @@ export default {
     tabs: {
       levels: '解锁',
       stickers: '贴纸',
+      avatars: '头像',
       frames: '边框',
       backgrounds: '主题'
     },
     levelUnlockDesc: '使用金币提前解锁新关卡！',
+    avatarsDesc: '换一个可爱的新头像！',
     framesDesc: '用漂亮的边框装饰你的头像！',
     backgroundsDesc: '改变数学王国的主题！',
+    removeAvatar: '恢复默认头像',
     allLevelsUnlocked: '所有关卡已解锁！',
     unlocked: '已解锁',
     owned: '已拥有',
@@ -300,17 +303,17 @@ export default {
       levelComplete: '完成关卡'
     },
     stickerSeries: {
-      unicorns: '独角兽系列',
-      special: '特殊系列',
-      ocean: '海洋世界',
-      space: '太空探险',
-      sweets: '甜蜜糖果',
-      animals: '动物朋友',
-      food: '美味食物',
-      sports: '运动时光',
-      nature: '自然元素',
-      fantasy: '奇幻世界',
-      celebration: '欢乐派对'
+      unicorns: '独角兽',
+      special: '特别',
+      ocean: '海洋',
+      space: '太空',
+      sweets: '甜点',
+      animals: '动物',
+      food: '美食',
+      sports: '运动',
+      nature: '自然',
+      fantasy: '奇幻',
+      celebration: '派对'
     },
     stickers: {
       // Unicorns
@@ -435,6 +438,9 @@ export default {
       ribbon: '蝴蝶结',
       clap: '鼓掌'
     },
+    avatars: {
+      redPanda: '小熊猫'
+    },
     frames: {
       gold: '金色边框',
       rainbow: '彩虹边框',
@@ -446,6 +452,8 @@ export default {
       crown: '皇冠边框'
     },
     backgrounds: {
+      bunny: '可爱兔兔',
+      bunnyDesc: '粉嫩兔兔的世界！',
       space: '太空冒险',
       spaceDesc: '探索星辰大海！',
       ocean: '海底世界',
@@ -587,6 +595,11 @@ export default {
     title: '错题回顾',
     empty: '太棒了！没有错题',
     emptyDesc: '继续保持，你做得很好！',
+    allReviewed: '全部复习完了！',
+    waitingDesc: '稍后再来继续练习吧。',
+    waitingCount: '{count} 道题目等待复习',
+    dueNow: '待复习',
+    waiting: '等待中',
     count: '{count} 道错题',
     practice: '开始练习',
     clear: '清空错题',

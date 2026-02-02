@@ -88,6 +88,27 @@
         </button>
       </div>
 
+      <!-- Avatars Tab -->
+      <div v-if="activeTab === 'avatars'" class="tab-content">
+        <div class="section-desc">{{ t.shop.avatarsDesc }}</div>
+        <div class="avatars-grid">
+          <AvatarShopCard
+            v-for="avatar in purchasableAvatars"
+            :key="avatar.id"
+            :avatar="avatar"
+            @purchase="confirmAvatarPurchase"
+            @equip="equipAvatar"
+          />
+        </div>
+        <button
+          v-if="coinsStore.equippedAvatar"
+          class="unequip-btn"
+          @click="unequipAvatar"
+        >
+          {{ t.shop.removeAvatar }}
+        </button>
+      </div>
+
       <!-- Backgrounds Tab -->
       <div v-if="activeTab === 'backgrounds'" class="tab-content">
         <div class="section-desc">{{ t.shop.backgroundsDesc }}</div>
@@ -184,6 +205,7 @@ import { useSound } from '../composables/useSound'
 import { useConfetti } from '../composables/useConfetti'
 import {
   purchasableStickers,
+  purchasableAvatars,
   avatarFrames,
   backgroundThemes,
   levelUnlockPrices
@@ -195,6 +217,7 @@ import LevelUnlockCard from './shop/LevelUnlockCard.vue'
 import StickerShopCard from './shop/StickerShopCard.vue'
 import FrameShopCard from './shop/FrameShopCard.vue'
 import BackgroundShopCard from './shop/BackgroundShopCard.vue'
+import AvatarShopCard from './shop/AvatarShopCard.vue'
 
 const emit = defineEmits(['back'])
 
@@ -215,6 +238,7 @@ const pendingPurchase = ref(null)
 const tabs = [
   { key: 'levels', icon: '🔓' },
   { key: 'stickers', icon: '🎨' },
+  { key: 'avatars', icon: '🦝' },
   { key: 'frames', icon: '🖼️' },
   { key: 'backgrounds', icon: '🌈' }
 ]
@@ -283,6 +307,17 @@ function confirmBackgroundPurchase(bg) {
   showConfirmDialog.value = true
 }
 
+function confirmAvatarPurchase(avatar) {
+  pendingPurchase.value = {
+    type: 'avatar',
+    id: avatar.id,
+    price: avatar.price,
+    icon: avatar.preview,
+    name: t.value.shop.avatars?.[avatar.nameKey] || avatar.nameKey
+  }
+  showConfirmDialog.value = true
+}
+
 function executePurchase() {
   if (!pendingPurchase.value) return
 
@@ -310,6 +345,12 @@ function executePurchase() {
     }
   } else if (type === 'background') {
     success = coinsStore.purchaseItem(id, price, 'background')
+    if (success) {
+      playPurchaseSound()
+      purchaseCelebration()
+    }
+  } else if (type === 'avatar') {
+    success = coinsStore.purchaseItem(id, price, 'avatar')
     if (success) {
       playPurchaseSound()
       purchaseCelebration()
@@ -342,6 +383,15 @@ function equipBackground(bg) {
 
 function unequipBackground() {
   coinsStore.equipBackground(null)
+}
+
+function equipAvatar(avatar) {
+  coinsStore.equipAvatar(avatar.id)
+  message.success(t.value.shop.equipped)
+}
+
+function unequipAvatar() {
+  coinsStore.equipAvatar(null)
 }
 
 function getTransactionReason(tx) {
@@ -496,6 +546,13 @@ function formatDate(dateStr) {
 
 /* Frames */
 .frames-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 16px;
+}
+
+/* Avatars */
+.avatars-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 16px;

@@ -148,6 +148,18 @@ export const purchasableStickers = {
 // All purchasable stickers as flat array
 export const allPurchasableStickers = Object.values(purchasableStickers).flat()
 
+// Purchasable avatars
+export const purchasableAvatars = [
+  {
+    id: 'avatar_red_panda',
+    nameKey: 'redPanda',
+    price: 800,
+    image: 'red_panda.png',
+    preview: '🦝'
+  }
+  // More avatars can be added here
+]
+
 // Avatar frames
 export const avatarFrames = [
   {
@@ -222,6 +234,15 @@ export const avatarFrames = [
 
 // Background themes
 export const backgroundThemes = [
+  {
+    id: 'bg_bunny',
+    nameKey: 'bunny',
+    price: 100,
+    preview: '🐰💕',
+    gradient: 'linear-gradient(135deg, #FFE4EC, #FFB6C1, #FFC0CB, #FFE4EC)',
+    particles: ['🐰', '💕', '🌸', '✨', '💖'],
+    description: 'bunnyDesc'
+  },
   {
     id: 'bg_space',
     nameKey: 'space',

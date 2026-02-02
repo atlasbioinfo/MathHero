@@ -272,12 +272,15 @@ export default {
     tabs: {
       levels: 'Unlock',
       stickers: 'Stickers',
+      avatars: 'Avatars',
       frames: 'Frames',
       backgrounds: 'Themes'
     },
     levelUnlockDesc: 'Use coins to unlock new levels early!',
+    avatarsDesc: 'Get a cute new avatar!',
     framesDesc: 'Decorate your avatar with beautiful frames!',
     backgroundsDesc: 'Change your math kingdom theme!',
+    removeAvatar: 'Reset Avatar',
     allLevelsUnlocked: 'All levels are already unlocked!',
     unlocked: 'Unlocked',
     owned: 'Owned',
@@ -300,17 +303,17 @@ export default {
       levelComplete: 'Level completed'
     },
     stickerSeries: {
-      unicorns: 'Unicorn Series',
-      special: 'Special Series',
-      ocean: 'Ocean World',
-      space: 'Space Adventure',
-      sweets: 'Sweet Treats',
-      animals: 'Animal Friends',
-      food: 'Yummy Food',
-      sports: 'Sports Fun',
-      nature: 'Nature Elements',
-      fantasy: 'Fantasy World',
-      celebration: 'Party Time'
+      unicorns: 'Unicorns',
+      special: 'Special',
+      ocean: 'Ocean',
+      space: 'Space',
+      sweets: 'Sweets',
+      animals: 'Animals',
+      food: 'Food',
+      sports: 'Sports',
+      nature: 'Nature',
+      fantasy: 'Fantasy',
+      celebration: 'Party'
     },
     stickers: {
       // Unicorns
@@ -434,6 +437,9 @@ export default {
       ribbon: 'Ribbon',
       clap: 'Clapping'
     },
+    avatars: {
+      redPanda: 'Red Panda'
+    },
     frames: {
       gold: 'Golden Frame',
       rainbow: 'Rainbow Frame',
@@ -445,6 +451,8 @@ export default {
       crown: 'Crown Frame'
     },
     backgrounds: {
+      bunny: 'Cute Bunny',
+      bunnyDesc: 'Adorable pink bunny world!',
       space: 'Space Adventure',
       spaceDesc: 'Explore the stars!',
       ocean: 'Ocean World',
@@ -586,6 +594,11 @@ export default {
     title: 'Review Mistakes',
     empty: 'Awesome! No mistakes',
     emptyDesc: 'Keep up the great work!',
+    allReviewed: 'All Reviewed!',
+    waitingDesc: 'Come back later for more practice.',
+    waitingCount: '{count} question(s) waiting for review',
+    dueNow: 'Due Now',
+    waiting: 'Waiting',
     count: '{count} mistakes',
     practice: 'Practice Now',
     clear: 'Clear All',

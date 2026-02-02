@@ -121,7 +121,9 @@ import CuteKeyboard from './CuteKeyboard.vue'
 
 const props = defineProps({
   operation: { type: String, required: true },
-  level: { type: Number, required: true }
+  level: { type: Number, required: true },
+  isReviewMode: { type: Boolean, default: false },
+  reviewQuestions: { type: Array, default: () => [] }
 })
 
 const emit = defineEmits(['complete', 'quit'])
@@ -235,6 +237,13 @@ function handleAnswer(isCorrect, answer, correctAnswer) {
 
   if (isCorrect) {
     playCorrectSound()
+    // In review mode, record correct answer for Ebbinghaus tracking
+    if (props.isReviewMode && props.reviewQuestions.length > 0) {
+      const questionId = props.reviewQuestions[gameStore.currentQuestionIndex]
+      if (questionId) {
+        wrongQuestionsStore.recordCorrectAnswer(questionId)
+      }
+    }
   } else {
     playWrongSound()
     // Record wrong answer for review
