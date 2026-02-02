@@ -1,0 +1,8 @@
+# MathHero - Math Practice for Kids
+# https://atlasbioinfo.github.io/MathHero/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://atlasbioinfo.github.io/MathHero/sitemap.xml
