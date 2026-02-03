@@ -245,7 +245,7 @@ onMounted(() => {
 @media (max-width: 768px) {
   .result-screen {
     padding: 16px;
-    padding-top: 60px;
+    padding-top: 30px;
     min-height: auto;
   }
 
@@ -257,7 +257,7 @@ onMounted(() => {
 @media (max-width: 500px) {
   .result-screen {
     padding: 12px;
-    padding-top: 55px;
+    padding-top: 40px;
     align-items: flex-start;
   }
 
@@ -300,7 +300,7 @@ onMounted(() => {
 @media (max-width: 360px) {
   .result-screen {
     padding: 10px;
-    padding-top: 50px;
+    padding-top: 30px;
   }
 
   .result-container {

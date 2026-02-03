@@ -185,7 +185,7 @@ function purchaseUnlock() {
 @media (max-width: 768px) {
   .level-select {
     padding: 16px;
-    padding-top: 60px;
+    padding-top: 30px;
   }
 
   .header {
@@ -202,7 +202,7 @@ function purchaseUnlock() {
 @media (max-width: 500px) {
   .level-select {
     padding: 12px;
-    padding-top: 55px;
+    padding-top: 40px;
   }
 
   .header {
@@ -228,7 +228,7 @@ function purchaseUnlock() {
 @media (max-width: 360px) {
   .level-select {
     padding: 10px;
-    padding-top: 50px;
+    padding-top: 30px;
   }
 
   .title {

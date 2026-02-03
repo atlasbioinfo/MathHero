@@ -146,7 +146,7 @@ function handleGenerateAndShare() {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  padding-top: 70px;
+  padding-top: 60px;
   padding-bottom: 40px;
 }
 
@@ -254,6 +254,18 @@ function handleGenerateAndShare() {
   box-shadow: 0 12px 40px rgba(74, 144, 217, 0.5);
 }
 
+.main-action-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.main-action-btn.princess:active {
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+}
+
+.main-action-btn.prince:active {
+  box-shadow: 0 4px 15px rgba(74, 144, 217, 0.3);
+}
+
 .btn-icon {
   font-size: 28px;
 }
@@ -341,7 +353,7 @@ function handleGenerateAndShare() {
 @media (max-width: 768px) {
   .home-screen {
     padding: 16px;
-    padding-top: 65px;
+    padding-top: 50px;
   }
 
   .stats-row {
@@ -353,7 +365,7 @@ function handleGenerateAndShare() {
 @media (max-width: 500px) {
   .home-screen {
     padding: 12px;
-    padding-top: 55px;
+    padding-top: 40px;
     padding-bottom: 30px;
   }
 
@@ -427,7 +439,7 @@ function handleGenerateAndShare() {
 @media (max-width: 360px) {
   .home-screen {
     padding: 10px;
-    padding-top: 50px;
+    padding-top: 30px;
   }
 
   .stats-row {
@@ -443,7 +455,7 @@ function handleGenerateAndShare() {
 /* Landscape mode on mobile */
 @media (max-height: 600px) and (orientation: landscape) {
   .home-screen {
-    padding-top: 50px;
+    padding-top: 35px;
   }
 
   .hero-section {

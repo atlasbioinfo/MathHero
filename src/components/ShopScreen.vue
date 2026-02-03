@@ -425,7 +425,7 @@ function unequipAvatar() {
 @media (max-width: 768px) {
   .shop-screen {
     padding: 16px;
-    padding-top: 60px;
+    padding-top: 50px;
   }
 
   .shop-title {
@@ -440,7 +440,7 @@ function unequipAvatar() {
 @media (max-width: 500px) {
   .shop-screen {
     padding: 12px;
-    padding-top: 55px;
+    padding-top: 40px;
   }
 
   .shop-header {

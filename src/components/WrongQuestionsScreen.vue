@@ -430,7 +430,7 @@ function debugQuestion(item) {
 @media (max-width: 500px) {
   .wrong-questions-screen {
     padding: 16px;
-    padding-top: 60px;
+    padding-top: 50px;
   }
 
   .title {

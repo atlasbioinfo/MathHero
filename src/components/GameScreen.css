@@ -232,7 +232,7 @@
 @media (max-width: 768px) {
   .game-screen {
     padding: 16px;
-    padding-top: 60px;
+    padding-top: 50px;
   }
 
   .game-header {
@@ -248,7 +248,7 @@
 @media (max-width: 500px) {
   .game-screen {
     padding: 12px;
-    padding-top: 55px;
+    padding-top: 40px;
   }
 
   .game-header {
@@ -352,7 +352,7 @@
 @media (max-width: 360px) {
   .game-screen {
     padding: 10px;
-    padding-top: 50px;
+    padding-top: 30px;
   }
 
   .game-header {

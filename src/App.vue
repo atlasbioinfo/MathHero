@@ -362,13 +362,9 @@ html, body, #app {
 }
 
 @media screen and (max-width: 768px) {
-  body {
-    position: fixed;
-    width: 100%;
-  }
-
+  /* 移除 position: fixed 以允许正常滚动 */
   .app-container {
-    height: calc(100vh - 8px);
+    min-height: calc(100vh - 8px);
     overflow-y: auto;
   }
 }

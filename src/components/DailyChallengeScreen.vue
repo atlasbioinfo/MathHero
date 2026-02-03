@@ -314,7 +314,7 @@ function startChallenge() {
 @media (max-width: 500px) {
   .daily-challenge-screen {
     padding: 16px;
-    padding-top: 60px;
+    padding-top: 50px;
   }
 
   .title {

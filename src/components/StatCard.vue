@@ -90,7 +90,7 @@ defineProps({
   }
 
   .stat-label {
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 
@@ -109,7 +109,7 @@ defineProps({
   }
 
   .stat-label {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
