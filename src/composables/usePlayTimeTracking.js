@@ -15,7 +15,8 @@ export function usePlayTimeTracking(currentScreen, goHome) {
   function startPlayTimeTracking() {
     if (playTimeInterval) return
 
-    playTimeStore.startPlaying()
+    // Only use addPlayTime to avoid double-counting
+    // Don't call startPlaying/stopPlaying which track session time separately
 
     playTimeInterval = setInterval(() => {
       playTimeStore.addPlayTime(10)
@@ -32,11 +33,13 @@ export function usePlayTimeTracking(currentScreen, goHome) {
       clearInterval(playTimeInterval)
       playTimeInterval = null
     }
-    playTimeStore.stopPlaying()
+    // Don't call stopPlaying to avoid double-counting time
   }
 
   function handleRestReminderClose() {
     showRestReminder.value = false
+    // Reset daily play time so user can continue playing after rest
+    playTimeStore.resetDailyTime()
     goHome()
   }
 
